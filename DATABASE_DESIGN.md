@@ -380,29 +380,33 @@ CREATE POLICY "Users can update their own avatars"
 - No server-side validation
 - Client has access to Supabase credentials
 
-### Supabase URL & Key Exposure
+### Supabase Credentials Management
 
-The Supabase URL and public anon key are exposed in the client (normal for SPAs):
+Always protect your Supabase credentials using environment variables:
 
 ```javascript
-// This is public and intentional
+// ✅ CORRECT: Use environment variables
 const supabase = createClient(
-  "https://yourproject.supabase.co", // Public URL
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", // Public anon key
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
 );
 ```
 
-This is **not a security issue** because:
+Store credentials in `.env`:
 
-- RLS prevents unauthorized data access
-- Anon key has limited permissions
-- Sensitive operations use auth checks
+```
+VITE_SUPABASE_URL=https://yourproject.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key_here
+```
 
-**It IS a security issue if you:**
+**Critical Security Rules:**
 
-- ❌ Expose your service/secret role key
-- ❌ Skip RLS policies
-- ❌ Trust client-side only validation
+- ❌ **Never** expose your service/secret role key
+- ❌ **Never** commit `.env` to version control
+- ❌ **Never** log or display credentials in code
+- ✅ Always use environment variables
+- ✅ Always enable Row-Level Security (RLS) policies
+- ✅ Always validate on the server side
 
 ## Backing Up Your Data
 
