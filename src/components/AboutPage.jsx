@@ -17,26 +17,36 @@ const AboutPage = () => {
         <section className="mb-8">
           <h2 className="mb-4 text-2xl font-semibold">Project Overview</h2>
           <p>
-            Convayto is a real-time chat application built with React.js and
-            Supabase. It provides essential features like user authentication,
-            profile management, and instant messaging. Designed as a learning
-            project, Convayto showcases the core functionalities of modern chat
-            applications while emphasizing clean and efficient code practices.
+            Convayto is an open-source real-time chat application built with
+            React.js and Supabase. It demonstrates modern web development
+            practices and is designed as a learning resource for developers
+            interested in real-time features, authentication, and full-stack
+            development. Whether you're learning React patterns or exploring
+            Supabase capabilities, Convayto provides a solid foundation to
+            understand and build upon.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="mb-4 text-2xl font-semibold">Goals</h2>
           <ul className="list-disc pl-5">
-            <li>To provide a seamless real-time chatting experience.</li>
-            <li>To ensure secure user authentication and data management.</li>
             <li>
-              To deliver a responsive and user-friendly interface across various
-              devices.
+              Build a real-world example of modern React patterns and practices.
             </li>
             <li>
-              To implement optimized performance with features like infinite
-              pagination and prefetching.
+              Demonstrate real-time data synchronization with Supabase Realtime.
+            </li>
+            <li>
+              Provide a learning resource for developers interested in
+              authentication, database design, and responsive UI.
+            </li>
+            <li>
+              Create an open-source project that encourages learning,
+              contributions, and community collaboration.
+            </li>
+            <li>
+              Show how to build performant applications with infinite
+              pagination, smart caching, and optimized data fetching.
             </li>
           </ul>
         </section>
@@ -123,7 +133,7 @@ const AboutPage = () => {
             >
               Alamin
             </a>
-            . Licensed under the Apache License 2.0. Do not claim as your own.
+            . Licensed under the Apache License 2.0. Contributions are welcome!.
           </p>
         </footer>
       </div>

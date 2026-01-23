@@ -11,7 +11,7 @@ function Copyright() {
         >
           Alamin
         </a>
-        . Licensed under the Apache License 2.0. Do not claim as your own.
+        . Licensed under the Apache License 2.0. Contributions welcome!
       </p>
     </div>
   );

@@ -21,7 +21,7 @@ function AccountConfirmation() {
     );
 
   // if authenticated, navigate to the home page
-  if (isAuthenticated) navigate("/", { replace: true });
+  if (isAuthenticated) navigate("/chat", { replace: true });
 
   // if not authenticated, show the error message
   if (!isAuthenticated)

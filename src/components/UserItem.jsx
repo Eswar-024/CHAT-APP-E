@@ -17,7 +17,7 @@ function UserItem({
 
   function handleClick() {
     handler();
-    navigate(`/m/${id}`, { replace: shouldReplace });
+    navigate(`/chat/${id}`, { replace: shouldReplace });
   }
 
   const handleKeyDown = useEnterKeyPress(handleClick);

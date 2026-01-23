@@ -21,7 +21,7 @@ function MessageTopBar() {
 
   function handleGoBack() {
     if (window.matchMedia("(max-width: 640px)").matches) {
-      navigate("/", { replace: true });
+      navigate("/chat", { replace: true });
       document.title = APP_NAME;
     } else {
       openSidebar();

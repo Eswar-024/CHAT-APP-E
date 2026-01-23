@@ -33,7 +33,7 @@ function Signin() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/", { replace: true });
+      navigate("/chat", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -46,7 +46,7 @@ function Signin() {
       { email, password },
       {
         onSuccess: () => {
-          navigate("/", {
+          navigate("/chat", {
             replace: true,
           });
         },

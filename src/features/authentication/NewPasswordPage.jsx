@@ -41,7 +41,7 @@ function ResetPassword() {
         onSuccess: () => {
           toast.dismiss();
           toast.success("Password updated successfully!");
-          navigate("/");
+          navigate("/chat");
         },
       },
     );

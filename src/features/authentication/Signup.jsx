@@ -50,7 +50,7 @@ function Signup() {
   useEffect(() => {
     const isAuthenticated = false;
     if (isAuthenticated) {
-      navigate("/", { replace: true });
+      navigate("/chat", { replace: true });
     }
   }, [navigate]);
 

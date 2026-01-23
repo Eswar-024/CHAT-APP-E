@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
 import AccountConfirmation from "./components/AccountConfirmation";
 import AllRoutesWrapper from "./components/AllRoutesWrapper";
 import AboutPage from "./components/AboutPage";
+import LandingPage from "./components/LandingPage";
 
 const queryClient = new QueryClient();
 
@@ -54,15 +55,16 @@ function App() {
         <BrowserRouter>
           <AllRoutesWrapper>
             <Routes>
+              <Route path="/" element={<LandingPage />} />
               <Route
-                path="/"
+                path="/chat"
                 element={
                   <ProtectedRoute>
                     <AppLayout />
                   </ProtectedRoute>
                 }
               >
-                <Route path="/m/:userId" element={<MessageView />} />
+                <Route path="/chat/:userId" element={<MessageView />} />
               </Route>
 
               <Route path="signup" element={<Signup />} />
