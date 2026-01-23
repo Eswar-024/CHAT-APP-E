@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaArrowRight, FaShieldAlt, FaMobile } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdChat, MdSecurity, MdSpeed } from "react-icons/md";
@@ -311,20 +311,20 @@ const LandingPage = () => {
               <h3 className="mb-4 font-semibold">Legal</h3>
               <ul className="text-textSecondary dark:text-textSecondary-dark space-y-2 text-sm">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/privacy"
                     className="hover:text-textPrimary dark:hover:text-textPrimary-dark"
                   >
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/terms"
                     className="hover:text-textPrimary dark:hover:text-textPrimary-dark"
                   >
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

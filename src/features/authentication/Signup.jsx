@@ -40,6 +40,7 @@ function Signup() {
       username: "",
       email: "",
       password: "",
+      acceptTerms: false,
     },
   });
 
@@ -72,8 +73,8 @@ function Signup() {
     }
   }, [isChecking, isTaken, setError, clearErrors]);
 
-  const onSubmit = ({ fullname, username, email, password }) => {
-    if (isChecking || isTaken) return;
+  const onSubmit = ({ fullname, username, email, password, acceptTerms }) => {
+    if (isChecking || isTaken || !acceptTerms) return;
 
     const cleanFullname = fullname.trim();
     const cleanUsername = username.trim();
@@ -217,6 +218,58 @@ function Signup() {
                   error={errors.password?.message}
                   disabled={isPending}
                 />
+              )}
+            />
+
+            <Controller
+              name="acceptTerms"
+              control={control}
+              rules={{
+                required:
+                  "You must accept the Privacy Policy and Terms of Service to continue.",
+              }}
+              render={({ field }) => (
+                <div className="mb-6">
+                  <label className="flex cursor-pointer items-start gap-3">
+                    <input
+                      {...field}
+                      type="checkbox"
+                      checked={field.value}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked);
+                        trigger("acceptTerms");
+                      }}
+                      className="accent-primary dark:accent-primary-dark mt-1 h-4 w-4 cursor-pointer"
+                      disabled={isPending}
+                      id="acceptTerms"
+                    />
+                    <span className="text-textSecondary dark:text-textSecondary-dark text-sm">
+                      I agree to the{" "}
+                      <a
+                        href="/privacy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary dark:text-primary-dark font-medium underline hover:opacity-80"
+                      >
+                        Privacy Policy
+                      </a>{" "}
+                      and{" "}
+                      <a
+                        href="/terms"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary dark:text-primary-dark font-medium underline hover:opacity-80"
+                      >
+                        Terms of Service
+                      </a>
+                    </span>
+                  </label>
+                  {errors.acceptTerms && (
+                    <p className="mt-2 text-xs text-red-500">
+                      {errors.acceptTerms.message}
+                    </p>
+                  )}
+                </div>
               )}
             />
 

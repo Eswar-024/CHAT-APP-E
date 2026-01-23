@@ -16,6 +16,8 @@ import AccountConfirmation from "./components/AccountConfirmation";
 import AllRoutesWrapper from "./components/AllRoutesWrapper";
 import AboutPage from "./components/AboutPage";
 import LandingPage from "./components/LandingPage";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import TermsOfService from "./components/TermsOfService";
 
 const queryClient = new QueryClient();
 
@@ -76,6 +78,8 @@ function App() {
                 element={<AccountConfirmation />}
               />
               <Route path="about" element={<AboutPage />} />
+              <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="terms" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AllRoutesWrapper>
