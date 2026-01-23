@@ -1,14 +1,5 @@
 import { MAXIMUM_AVATAR_FILE_SIZE } from "../../config";
 import supabase, { supabaseUrl } from "../../services/supabase";
-import { demoAccounts } from "../../config";
-
-async function isDemoAccount() {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return demoAccounts.some((account) => account.email === user.email);
-}
 
 export async function updateCurrentUser({
   password,
@@ -18,12 +9,6 @@ export async function updateCurrentUser({
   avatar,
   previousAvatar,
 }) {
-  // if the user is demo 1 or demo 2, don't allow them to update their profile
-  const isDemo = await isDemoAccount();
-  if (isDemo) {
-    throw new Error("You can't update the profile of a demo account!");
-  }
-
   // 1. Update password OR fullname
   let updateData;
 
@@ -79,12 +64,6 @@ export async function updateCurrentUser({
 ///////////////////////
 
 export async function sendPasswordResetEmail({ email, redirectTo }) {
-  // if the user is demo 1 or demo 2, don't allow them to update their profile
-  const isDemo = await isDemoAccount();
-  if (isDemo) {
-    throw new Error("You can't update the profile of a demo account!");
-  }
-
   // Send the password reset email
   let { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo,
