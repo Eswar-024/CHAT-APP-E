@@ -68,16 +68,16 @@ export default {
       },
 
       height: {
-        "screen-safe": ["100vh", "100dvh", "100svh"],
+        "screen-safe": ["100vh", "100svh", "100dvh"],
       },
       width: {
-        "screen-safe": ["100vw", "100dvw", "100svw"],
+        "screen-safe": ["100vw", "100svw", "100dvw"],
       },
       minHeight: {
-        "screen-safe": ["100vh", "100dvh", "100svh"],
+        "screen-safe": ["100vh", "100svh", "100dvh"],
       },
       minWidth: {
-        "screen-safe": ["100vw", "100dvw", "100svw"],
+        "screen-safe": ["100vw", "100svw", "100dvw"],
       },
     },
   },

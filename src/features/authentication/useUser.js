@@ -7,19 +7,19 @@ export function useUser() {
   const { isLoading, data } = useQuery({
     queryKey: ["user"],
     queryFn: getCurrentUser,
+    retry: false,
   });
 
-  const user = data?.session?.user;
+  const user = data?.user ?? null;
 
   const invalidateUser = () => {
-    queryClient.invalidateQueries("user");
+    queryClient.invalidateQueries({ queryKey: ["user"] });
   };
 
   return {
     isLoading,
-    session: data?.session,
     user,
-    isAuthenticated: user?.role === "authenticated",
+    isAuthenticated: Boolean(user),
     invalidateUser,
   };
 }

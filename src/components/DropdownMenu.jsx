@@ -1,7 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import {
   RiInformationLine,
   RiMoonClearLine,
-  RiBugLine,
   RiSettings2Line,
   RiLogoutCircleLine,
 } from "react-icons/ri";
@@ -11,22 +11,19 @@ import { useUser } from "../features/authentication/useUser";
 import Loader from "./Loader";
 import ToggleableContent from "./ToggleableContent";
 import Menu from "./Menu";
-import { APP_NAME } from "../config";
 
 export default function DropdownMenu() {
   const { user } = useUser();
-  const {
-    email,
-    user_metadata: { fullname },
-  } = user;
-  const {
-    openAccountView,
-    isDarkMode,
-    toggleDarkMode,
-    isMenuOpen,
-    toggleMenu,
-  } = useUi();
+  const displayName = user?.display_name;
+  const username = user?.username;
+  const navigate = useNavigate();
+  const { isDarkMode, toggleDarkMode, isMenuOpen, toggleMenu } = useUi();
   const { signout, isPending } = useSignout();
+
+  function goToProfile() {
+    toggleMenu();
+    navigate("/profile");
+  }
 
   return (
     <ToggleableContent
@@ -36,12 +33,12 @@ export default function DropdownMenu() {
     >
       <Menu>
         <Menu.Header>
-          <Menu.Header.Name>{fullname}</Menu.Header.Name>
-          <Menu.Header.Email>{email}</Menu.Header.Email>
+          <Menu.Header.Name>{displayName}</Menu.Header.Name>
+          <Menu.Header.Email>@{username}</Menu.Header.Email>
         </Menu.Header>
 
         <Menu.List>
-          <Menu.ButtonItem onClick={openAccountView}>
+          <Menu.ButtonItem onClick={goToProfile}>
             <RiSettings2Line />
             <div>My Account</div>
           </Menu.ButtonItem>
@@ -50,13 +47,6 @@ export default function DropdownMenu() {
             <RiMoonClearLine />
             <div>Dark Mode</div>
           </Menu.TogglerItem>
-
-          <Menu.LinkItem
-            href={`https://github.com/CodeWithAlamin/${APP_NAME}/issues`}
-          >
-            <RiBugLine />
-            <div>Report Bug</div>
-          </Menu.LinkItem>
 
           <Menu.RouteItem to={"/about"}>
             <RiInformationLine />

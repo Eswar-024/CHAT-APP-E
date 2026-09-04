@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getConversations } from "./apiConversation";
+import { getConversations, markConversationRead, togglePinConversation } from "./apiConversation";
 import { getMessages } from "../messageArea/apiMessage";
 import { useUser } from "../authentication/useUser";
 import { useEffect, useRef } from "react";
@@ -10,20 +10,16 @@ import useConversationSubscription from "./useConversationSubscription";
 export function useConversations() {
   const queryClient = useQueryClient();
   const { user } = useUser();
-  const myUserId = user.id;
+  const myUserId = user?.id;
 
   const { data, isPending, error } = useQuery({
     queryKey: ["conversations", myUserId],
-    queryFn: () => getConversations({ myUserId }),
+    queryFn: getConversations,
+    enabled: Boolean(myUserId),
   });
 
-  // Realtime Subscription
   useConversationSubscription(myUserId);
 
-  /////////////
-  // Prefetching
-  /////////////
-  // set true temporariliiy to avoid prefetching
   const hasPrefetched = useRef(false);
 
   useEffect(() => {
@@ -31,27 +27,47 @@ export function useConversations() {
 
     data?.slice(0, MAX_PREFETCHED_CONVERSATIONS).forEach((conv) => {
       const conversation_id = conv?.id;
-      const friendUserId = conv?.friendInfo?.id;
+      const friendUserId = conv?.peer?.id;
 
       if (!conversation_id || !friendUserId) return;
 
-      // prefetch the messages
       queryClient.prefetchInfiniteQuery({
         queryKey: ["friend", friendUserId],
         queryFn: ({ pageParam }) => getMessages({ conversation_id, pageParam }),
-        pages: 1,
+        initialPageParam: undefined,
       });
 
-      // prefetch the convInfo
       queryClient.prefetchQuery({
         queryKey: ["convInfo", friendUserId],
-        queryFn: () => getConvInfoById({ myUserId, friendUserId }),
+        queryFn: () => getConvInfoById({ friendUserId }),
       });
     });
 
     hasPrefetched.current = true;
-  }, [data, queryClient, myUserId]);
-  // prefetch ends
+  }, [data, queryClient]);
 
-  return { conversations: data, isPending, error };
+  useEffect(() => {
+    hasPrefetched.current = false;
+  }, [myUserId]);
+
+  async function markRead(conversationId) {
+    if (!conversationId) return;
+    const updated = await markConversationRead(conversationId);
+    queryClient.setQueryData(["conversations", myUserId], (prev) => {
+      if (!prev) return prev;
+      return prev.map((conv) => (conv.id === updated.id ? updated : conv));
+    });
+  }
+
+  async function togglePin(conversationId) {
+    if (!conversationId) return;
+    const updated = await togglePinConversation(conversationId);
+    queryClient.setQueryData(["conversations", myUserId], (prev) => {
+      if (!prev) return prev;
+      return prev.map((conv) => (conv.id === updated.id ? updated : conv));
+    });
+    queryClient.invalidateQueries({ queryKey: ["conversations", myUserId] });
+  }
+
+  return { conversations: data, isPending, error, markRead, togglePin, myUserId };
 }

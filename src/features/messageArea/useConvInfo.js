@@ -6,7 +6,6 @@ import { useUser } from "../authentication/useUser";
 function useConvInfo() {
   const { userId: friendUserId } = useParams();
   const { user } = useUser();
-  const myUserId = user?.id;
 
   const {
     data: convInfo,
@@ -15,9 +14,8 @@ function useConvInfo() {
     error,
   } = useQuery({
     queryKey: ["convInfo", friendUserId],
-    queryFn: () => getConvInfoById({ myUserId, friendUserId }),
-
-    // convInfo is not going to change so we can set staleTime to Infinity
+    queryFn: () => getConvInfoById({ friendUserId }),
+    enabled: Boolean(user?.id && friendUserId),
     staleTime: Infinity,
   });
 

@@ -1,6 +1,6 @@
-# Contributing to Convayto
+# Contributing to CHAT APP
 
-Thank you for your interest in contributing to Convayto! This guide will help you get started.
+Thank you for your interest in contributing to CHAT APP! This guide will help you get started.
 
 ## Code of Conduct
 
@@ -31,14 +31,14 @@ We are committed to providing a welcoming and inclusive community. All contribut
 2. **Clone your fork**
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/Convayto.git
-   cd Convayto
+   git clone <this-repository>
+   cd <this-repository>
    ```
 
-3. **Add upstream remote**
+3. **Add upstream remote** (if you have a fork)
 
    ```bash
-   git remote add upstream https://github.com/CodeWithAlamin/Convayto.git
+   git remote add upstream <this-repository>
    ```
 
 4. **Install dependencies**
@@ -219,7 +219,7 @@ const formatDate = (date) => {
 
 ### Running Tests
 
-Currently, Convayto doesn't have automated tests. **This is a great area to contribute!** If you'd like to add tests, see the Future Improvements section in the main README.
+Currently, CHAT APP doesn't have automated tests. **This is a great area to contribute!** If you'd like to add tests, see the Future Improvements section in the main README.
 
 ### Database Changes
 
@@ -263,4 +263,4 @@ Contributors will be recognized in:
 - Release notes
 - Contributor section in README (if you'd like)
 
-Thank you for making Convayto better! 🙌
+Thank you for making CHAT APP better! 🙌

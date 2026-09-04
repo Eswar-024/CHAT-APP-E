@@ -1,8 +1,17 @@
 import { useEffect } from "react";
 import { useUser } from "../features/authentication/useUser";
 import { useNavigate } from "react-router-dom";
-import Loader from "./Loader";
 import MainContainer from "./MainContainer";
+
+function AuthBootSkeleton() {
+  return (
+    <div className="auth-boot" aria-busy="true" aria-label="Loading">
+      <span className="skel-line skel-line--wide" />
+      <span className="skel-line" />
+      <span className="skel-line skel-line--short" />
+    </div>
+  );
+}
 
 function ProtectedRoute({ children }) {
   const navigate = useNavigate();
@@ -14,7 +23,7 @@ function ProtectedRoute({ children }) {
   useEffect(
     function () {
       if (!isAuthenticated && !isLoading)
-        navigate("/signin", { replace: true });
+        navigate("/login", { replace: true });
     },
     [isAuthenticated, isLoading, navigate],
   );
@@ -23,7 +32,7 @@ function ProtectedRoute({ children }) {
   if (isLoading)
     return (
       <MainContainer>
-        <Loader size="large" text="Loading" />
+        <AuthBootSkeleton />
       </MainContainer>
     );
 

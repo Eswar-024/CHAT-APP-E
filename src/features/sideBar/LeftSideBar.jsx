@@ -12,24 +12,30 @@ function LeftSideBar() {
 
   useEffect(() => {
     userId ? closeSidebar() : openSidebar();
-  }, [userId]);
+  }, [userId, closeSidebar, openSidebar]);
 
   function handleToggleSidebar() {
     userId && closeSidebar();
   }
 
   return (
-    <ToggleableContent isOpen={isSidebarOpen} toggle={handleToggleSidebar}>
-      <aside
-        className={`${
-          isSidebarOpen
-            ? "visible left-0 opacity-100"
-            : "invisible -left-full opacity-0"
-        } absolute top-0 z-30 h-screen-safe w-full overflow-hidden bg-bgPrimary shadow-lg transition-all duration-500 ease-[cubic-bezier(.15,.72,.08,.99)] dark:bg-bgPrimary-dark sm:w-[23rem] md:visible md:relative md:left-0 md:opacity-100`}
+    <div className="col-start-1 row-start-1 h-full min-h-0 w-full min-w-0">
+      <ToggleableContent
+        isOpen={isSidebarOpen}
+        toggle={handleToggleSidebar}
+        overlay={userId ? "dim" : "none"}
       >
-        {isAccountViewOpen ? <MyAccountView /> : <DefaultView />}
-      </aside>
-    </ToggleableContent>
+        <aside
+          className={`${
+            isSidebarOpen
+              ? "visible left-0 opacity-100"
+              : "invisible -left-full opacity-0"
+          } absolute top-0 z-30 min-h-screen-safe w-full overflow-y-auto bg-white pt-[env(safe-area-inset-top)] transition-all duration-300 ease-out md:visible md:relative md:left-0 md:h-full md:w-full md:opacity-100`}
+        >
+          {isAccountViewOpen ? <MyAccountView /> : <DefaultView />}
+        </aside>
+      </ToggleableContent>
+    </div>
   );
 }
 

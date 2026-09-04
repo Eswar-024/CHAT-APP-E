@@ -1,55 +1,62 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { subscribeRealtimeConversation } from "./apiRealtimeConversation";
 
 const useConversationSubscription = (myUserId) => {
   const queryClient = useQueryClient();
-  const subscriptionConversationRef = useRef(null);
 
-  useEffect(
-    function () {
-      if (!myUserId || subscriptionConversationRef.current) return;
+  useEffect(() => {
+    if (!myUserId) return undefined;
 
-      const callback = (payload) => {
+    const subscription = subscribeRealtimeConversation({
+      callback: (payload) => {
         queryClient.setQueryData(["conversations", myUserId], (prevData) => {
-          if (payload?.eventType === "INSERT") {
-            // Insert the new entry at the beginning of the array
-            return [payload.new, ...prevData];
-          } else if (payload?.eventType === "UPDATE") {
-            // Find the updated conversation and update it
-            const updatedConversation = prevData.find(
-              (conversation) => conversation.id === payload.new.id,
-            );
-            const otherConversations = prevData.filter(
-              (conversation) => conversation.id !== payload.new.id,
-            );
-
-            // Return the updated conversation at the beginning of the array
-            return [
-              { ...updatedConversation, ...payload.new },
-              ...otherConversations,
-            ];
+          if (!prevData) {
+            queryClient.invalidateQueries({
+              queryKey: ["conversations", myUserId],
+            });
+            return prevData;
           }
+
+          const index = prevData.findIndex(
+            (conversation) => conversation.id === payload.conversationId,
+          );
+
+          if (index === -1) {
+            queryClient.invalidateQueries({
+              queryKey: ["conversations", myUserId],
+            });
+            return prevData;
+          }
+
+          const current = prevData[index];
+          if (
+            payload.last_message?.id &&
+            current.last_message?.id === payload.last_message.id
+          ) {
+            return prevData;
+          }
+
+          const updated = {
+            ...current,
+            last_message: payload.last_message,
+            last_message_at: payload.last_message?.created_at,
+          };
+          const rest = prevData.filter((_, i) => i !== index);
+          return [updated, ...rest];
         });
-      };
+      },
+      onReconnect: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["conversations", myUserId],
+        });
+      },
+    });
 
-      subscriptionConversationRef.current = subscribeRealtimeConversation({
-        myUserId,
-        callback,
-      });
-
-      return () => {
-        if (subscriptionConversationRef.current) {
-          subscriptionConversationRef.current.unsubscribe();
-          subscriptionConversationRef.current = null;
-
-          // console.log("unsubscribed conversation");
-        }
-      };
-    },
-
-    [myUserId, queryClient],
-  );
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [myUserId, queryClient]);
 };
 
 export default useConversationSubscription;

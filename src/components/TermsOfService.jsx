@@ -9,7 +9,7 @@ const TermsOfService = () => {
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-semibold">1. Acceptance of Terms</h2>
           <p>
-            By accessing and using Convayto, you accept and agree to be bound by
+            By accessing and using CHAT APP, you accept and agree to be bound by
             the terms and provision of this agreement. If you do not agree to
             abide by the above, please do not use this service.
           </p>
@@ -19,7 +19,7 @@ const TermsOfService = () => {
           <h2 className="mb-3 text-xl font-semibold">2. Use License</h2>
           <p className="mb-3">
             Permission is granted to temporarily download one copy of the
-            materials (information or software) on Convayto for personal,
+            materials (information or software) on CHAT APP for personal,
             non-commercial transitory viewing only. This is the grant of a
             license, not a transfer of title, and under this license you may
             not:
@@ -32,7 +32,7 @@ const TermsOfService = () => {
             </li>
             <li>
               Attempt to decompile or reverse engineer any software contained on
-              Convayto
+              CHAT APP
             </li>
             <li>
               Remove any copyright or proprietary notations from the materials
@@ -48,7 +48,7 @@ const TermsOfService = () => {
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-semibold">3. Disclaimer</h2>
           <p>
-            The materials on Convayto are provided on an "as is" basis. Convayto
+            The materials on CHAT APP are provided on an "as is" basis. CHAT APP
             makes no warranties, expressed or implied, and hereby disclaims and
             negates all other warranties including, without limitation, implied
             warranties or conditions of merchantability, fitness for a
@@ -60,10 +60,10 @@ const TermsOfService = () => {
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-semibold">4. Limitations</h2>
           <p>
-            In no event shall Convayto or its suppliers be liable for any
+            In no event shall CHAT APP or its suppliers be liable for any
             damages (including, without limitation, damages for loss of data or
             profit, or due to business interruption) arising out of the use or
-            inability to use the materials on Convayto, even if we or our
+            inability to use the materials on CHAT APP, even if we or our
             authorized representative has been notified orally or in writing of
             the possibility of such damage.
           </p>
@@ -74,10 +74,10 @@ const TermsOfService = () => {
             5. Accuracy of Materials
           </h2>
           <p>
-            The materials appearing on Convayto could include technical,
-            typographical, or photographic errors. Convayto does not warrant
+            The materials appearing on CHAT APP could include technical,
+            typographical, or photographic errors. CHAT APP does not warrant
             that any of the materials on our application are accurate, complete,
-            or current. Convayto may make changes to the materials contained on
+            or current. CHAT APP may make changes to the materials contained on
             our application at any time without notice.
           </p>
         </section>
@@ -85,9 +85,9 @@ const TermsOfService = () => {
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-semibold">6. Links</h2>
           <p>
-            Convayto has not reviewed all of the sites linked to its application
+            CHAT APP has not reviewed all of the sites linked to its application
             and is not responsible for the contents of any such linked site. The
-            inclusion of any link does not imply endorsement by Convayto of the
+            inclusion of any link does not imply endorsement by CHAT APP of the
             site. Use of any such linked website is at the user's own risk.
           </p>
         </section>
@@ -95,7 +95,7 @@ const TermsOfService = () => {
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-semibold">7. Modifications</h2>
           <p>
-            Convayto may revise these terms of service for our application at
+            CHAT APP may revise these terms of service for our application at
             any time without notice. By using this application, you are agreeing
             to be bound by the then current version of these terms of service.
           </p>

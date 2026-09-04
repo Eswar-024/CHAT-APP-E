@@ -11,12 +11,14 @@ function Signout() {
 
   return (
     <button
-      className="flex flex-shrink-0 items-center justify-center gap-2 rounded-full border border-LightShade/20 bg-LightShade/5 p-3  shadow-sm hover:bg-LightShade/20"
+      type="button"
+      className="flex flex-shrink-0 items-center justify-center gap-2 rounded-full border border-LightShade/20 bg-LightShade/5 p-3 shadow-sm hover:bg-LightShade/20"
       disabled={isPending}
       onClick={handleSignout}
+      aria-label="Sign out"
     >
-      {isPending ? <Loader /> : <RiLogoutCircleLine aria-label="logout" />}
-      <span className="hidden xm:block">Sign out</span>
+      {isPending ? <Loader /> : <RiLogoutCircleLine aria-hidden="true" />}
+      <span className="hidden sm:block">Sign out</span>
     </button>
   );
 }

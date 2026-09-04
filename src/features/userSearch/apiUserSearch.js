@@ -1,14 +1,8 @@
-import supabase from "../../services/supabase";
+import { apiRequest } from "../../lib/api";
 
 export async function searchPeople(query) {
-  let { data: results, error } = await supabase
-    .from("users")
-    .select("*")
-    .or(
-      `fullname.ilike.%${query}%,username.ilike.%${query}%,email.ilike.%${query}%`,
-    );
-
-  if (error) throw new Error(error.message);
-
-  return results;
+  const data = await apiRequest(
+    `/api/users?q=${encodeURIComponent(query)}`,
+  );
+  return data.users;
 }

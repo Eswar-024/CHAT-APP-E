@@ -1,6 +1,6 @@
 import {
   APP_NAME,
-  EMAIL_REGEX,
+  MAX_BIO_LENGTH,
   MAX_NAME_LENGTH,
   MAX_USERNAME_LENGTH,
   MIN_PASSWORD_LENGTH,
@@ -12,111 +12,93 @@ import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { useSignup } from "./useSignup";
-import useCheckUsernameAvailability from "./useCheckUsernameAvailability";
+import { useUser } from "./useUser";
 import Loader from "../../components/Loader";
-import Heading from "../../components/Heading";
 import MainContainer from "../../components/MainContainer";
 import FormContainer from "../../components/FormContainer";
 import InputBox from "../../components/InputBox";
 import SubmitBtn from "../../components/SubmitBtn";
 import TextLink from "../../components/TextLink";
-import EmailConfirmation from "../../components/EmailConfirmation";
 import LogoLarge from "../../components/LogoLarge";
+import { FiUser, FiAtSign, FiLock, FiCheckCircle, FiFileText } from "react-icons/fi";
 
 function Signup() {
-  document.title = APP_NAME + " - Sign up";
-  const { signup, isPending, isSuccess } = useSignup();
-  // const isSuccess = true;
+  document.title = `${APP_NAME} - Sign up`;
+  const { signup, isPending } = useSignup();
+  const { isAuthenticated, isLoading } = useUser();
+  const navigate = useNavigate();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     trigger,
     setError,
-    clearErrors,
+    getValues,
   } = useForm({
     defaultValues: {
-      fullname: "",
+      display_name: "",
       username: "",
-      email: "",
       password: "",
-      acceptTerms: false,
+      confirmPassword: "",
+      bio: "",
     },
   });
 
-  const navigate = useNavigate();
-  const { isChecking, isBusy, isTaken, checkUsername, reset } =
-    useCheckUsernameAvailability();
-
   useEffect(() => {
-    const isAuthenticated = false;
-    if (isAuthenticated) {
+    if (!isLoading && isAuthenticated) {
       navigate("/chat", { replace: true });
     }
-  }, [navigate]);
+  }, [isAuthenticated, isLoading, navigate]);
 
-  useEffect(() => {
-    if (isChecking) {
-      setError("username", {
-        type: "checking",
-        message: "Checking...",
-      });
-      return;
-    } else if (isTaken) {
-      setError("username", {
-        type: "server",
-        message: "Username is already taken.",
-      });
-      return;
-    } else {
-      clearErrors("username");
-    }
-  }, [isChecking, isTaken, setError, clearErrors]);
-
-  const onSubmit = ({ fullname, username, email, password, acceptTerms }) => {
-    if (isChecking || isTaken || !acceptTerms) return;
-
-    const cleanFullname = fullname.trim();
-    const cleanUsername = username.trim();
-    const cleanEmail = email.trim();
-
-    if (!isChecking && !isTaken && !isBusy) {
-      signup(
-        {
-          fullname: cleanFullname,
-          username: cleanUsername,
-          email: cleanEmail,
-          password,
+  const onSubmit = ({ display_name, username, password, bio }) => {
+    signup(
+      {
+        display_name: display_name.trim(),
+        username: username.trim(),
+        password,
+        bio: bio?.trim() || undefined,
+      },
+      {
+        onSuccess: () => {
+          navigate("/chat", { replace: true });
         },
-        {
-          onSuccess: () => {
-            reset();
-          },
+        onError: (error) => {
+          if (error.status === 409) {
+            setError("username", {
+              type: "server",
+              message: error.message,
+            });
+          }
         },
-      );
-    }
+      },
+    );
   };
 
   return (
     <MainContainer>
-      <LogoLarge />
+      <div className="view-enter relative z-10 w-full max-w-md px-3 py-6" data-motion="auth">
+        <FormContainer onSubmit={handleSubmit(onSubmit)}>
+          <LogoLarge />
 
-      <FormContainer onSubmit={handleSubmit(onSubmit)}>
-        {isSuccess ? (
-          <EmailConfirmation />
-        ) : (
-          <>
-            <Heading addClass="text-3xl">Sign up</Heading>
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+              Create your account
+            </h1>
+            <p className="mt-1 text-xs font-semibold text-slate-800 sm:text-sm">
+              Join {APP_NAME} and start chatting.
+            </p>
+          </div>
 
+          <div className="space-y-1">
             <Controller
-              name="fullname"
+              name="display_name"
               control={control}
               rules={{
-                required: "Enter your full name.",
+                required: "Enter your display name.",
                 pattern: {
                   value: NAME_REGEX,
-                  message:
-                    "Only letters, numbers, and single spaces are allowed.",
+                  message: "Only letters, numbers, and single spaces allowed.",
                 },
                 maxLength: {
                   value: MAX_NAME_LENGTH,
@@ -126,12 +108,15 @@ function Signup() {
               render={({ field }) => (
                 <InputBox
                   type="text"
+                  label="Display name"
+                  icon={FiUser}
                   value={field.value}
                   onChange={field.onChange}
-                  onBlur={() => trigger("fullname")}
-                  placeholder="Full name"
-                  htmlFor="fullname"
-                  error={errors.fullname?.message}
+                  onBlur={() => trigger("display_name")}
+                  placeholder="e.g. Alex Smith"
+                  htmlFor="display_name"
+                  autoComplete="name"
+                  error={errors.display_name?.message}
                   disabled={isPending}
                 />
               )}
@@ -145,7 +130,7 @@ function Signup() {
                 pattern: {
                   value: USERNAME_REGEX,
                   message:
-                    "Only lowercase letters, numbers, underscores, and dashes are allowed.",
+                    "Only letters, numbers, underscores, and dashes allowed.",
                 },
                 minLength: {
                   value: MIN_USERNAME_LENGTH,
@@ -159,39 +144,15 @@ function Signup() {
               render={({ field }) => (
                 <InputBox
                   type="text"
+                  label="Username"
+                  icon={FiAtSign}
                   value={field.value}
                   onChange={field.onChange}
-                  onBlur={() => {
-                    trigger("username");
-                    checkUsername(field.value);
-                  }}
-                  placeholder="Username"
+                  onBlur={() => trigger("username")}
+                  placeholder="e.g. alex_smith"
                   htmlFor="username"
+                  autoComplete="username"
                   error={errors.username?.message}
-                  disabled={isPending}
-                />
-              )}
-            />
-
-            <Controller
-              name="email"
-              control={control}
-              rules={{
-                required: "Enter your email.",
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Invalid email. Please enter a valid email.",
-                },
-              }}
-              render={({ field }) => (
-                <InputBox
-                  type="email"
-                  value={field.value}
-                  onChange={field.onChange}
-                  onBlur={() => trigger("email")}
-                  placeholder="Email"
-                  htmlFor="email"
-                  error={errors.email?.message}
                   disabled={isPending}
                 />
               )}
@@ -210,11 +171,14 @@ function Signup() {
               render={({ field }) => (
                 <InputBox
                   type="password"
+                  label="Password"
+                  icon={FiLock}
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={() => trigger("password")}
-                  placeholder="Password"
+                  placeholder="At least 8 characters"
                   htmlFor="password"
+                  autoComplete="new-password"
                   error={errors.password?.message}
                   disabled={isPending}
                 />
@@ -222,77 +186,75 @@ function Signup() {
             />
 
             <Controller
-              name="acceptTerms"
+              name="confirmPassword"
               control={control}
               rules={{
-                required:
-                  "You must accept the Privacy Policy and Terms of Service to continue.",
+                required: "Confirm your password.",
+                validate: (value) =>
+                  value === getValues().password || "Passwords don't match.",
               }}
               render={({ field }) => (
-                <div className="mb-6">
-                  <label className="flex cursor-pointer items-start gap-3">
-                    <input
-                      {...field}
-                      type="checkbox"
-                      checked={field.value}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                        trigger("acceptTerms");
-                      }}
-                      className="accent-primary dark:accent-primary-dark mt-1 h-4 w-4 cursor-pointer"
-                      disabled={isPending}
-                      id="acceptTerms"
-                    />
-                    <span className="text-textSecondary dark:text-textSecondary-dark text-sm">
-                      I agree to the{" "}
-                      <a
-                        href="/privacy"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary dark:text-primary-dark font-medium underline hover:opacity-80"
-                      >
-                        Privacy Policy
-                      </a>{" "}
-                      and{" "}
-                      <a
-                        href="/terms"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary dark:text-primary-dark font-medium underline hover:opacity-80"
-                      >
-                        Terms of Service
-                      </a>
-                    </span>
-                  </label>
-                  {errors.acceptTerms && (
-                    <p className="mt-2 text-xs text-red-500">
-                      {errors.acceptTerms.message}
-                    </p>
-                  )}
-                </div>
+                <InputBox
+                  type="password"
+                  label="Confirm password"
+                  icon={FiCheckCircle}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={() => trigger("confirmPassword")}
+                  placeholder="Re-enter your password"
+                  htmlFor="confirmPassword"
+                  autoComplete="new-password"
+                  error={errors.confirmPassword?.message}
+                  disabled={isPending}
+                />
               )}
             />
 
-            <SubmitBtn
-              disabled={isPending || isChecking || isTaken || isBusy}
-              type="submit"
-            >
-              {isPending ? (
-                <>
-                  <Loader size="small" />
-                  <span className="ml-2">Signing up...</span>
-                </>
-              ) : (
-                <span>Sign up</span>
+            <Controller
+              name="bio"
+              control={control}
+              rules={{
+                maxLength: {
+                  value: MAX_BIO_LENGTH,
+                  message: `Maximum ${MAX_BIO_LENGTH} characters allowed.`,
+                },
+              }}
+              render={({ field }) => (
+                <InputBox
+                  type="text"
+                  label="Bio (optional)"
+                  icon={FiFileText}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={() => trigger("bio")}
+                  placeholder="Say something about yourself..."
+                  htmlFor="bio"
+                  error={errors.bio?.message}
+                  disabled={isPending}
+                />
               )}
-            </SubmitBtn>
+            />
+          </div>
 
-            <p>
-              Already a user? <TextLink to="/signin">Sign in</TextLink>
-            </p>
-          </>
-        )}
-      </FormContainer>
+          <SubmitBtn disabled={isPending} type="submit">
+            {isPending ? (
+              <div className="flex items-center justify-center gap-2">
+                <Loader size="small" />
+                <span>Creating Account...</span>
+              </div>
+            ) : (
+              <span>Create Account</span>
+            )}
+          </SubmitBtn>
+
+          <p className="mt-6 text-center text-xs font-semibold text-slate-900 sm:text-sm">
+            Already have an account?{" "}
+            <TextLink to="/signin" addClass="font-bold text-indigo-900 underline hover:text-indigo-950">
+              Sign in
+            </TextLink>
+          </p>
+        </FormContainer>
+      </div>
     </MainContainer>
   );
 }

@@ -1,4 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+function newestMessage(pages) {
+  for (let index = pages.length - 1; index >= 0; index -= 1) {
+    const page = pages[index];
+    if (page?.length) {
+      return page[page.length - 1];
+    }
+  }
+  return null;
+}
 
 function useScrollBehavior({
   pages,
@@ -6,28 +16,64 @@ function useScrollBehavior({
   lastPageBtm,
   isIntersectingTop,
   isIntersectingBtm,
+  onAlignedBottom,
+  onNewWhileAway,
 }) {
-  const scrollTo = (ref, behavior = "smooth") => {
-    ref?.current?.scrollIntoView({ behavior });
-  };
+  const nearBottomRef = useRef(true);
+  const intersectingTopRef = useRef(false);
+  const didInitRef = useRef(false);
+  const prevRef = useRef({ newestId: undefined, pageCount: 0 });
 
   useEffect(() => {
-    if (!pages || !pages[0]) return;
+    nearBottomRef.current = Boolean(isIntersectingBtm);
+    if (isIntersectingBtm) {
+      onAlignedBottom?.();
+    }
+  }, [isIntersectingBtm, onAlignedBottom]);
 
-    if (isIntersectingBtm) return scrollTo(bottomRef);
+  useEffect(() => {
+    intersectingTopRef.current = Boolean(isIntersectingTop);
+  }, [isIntersectingTop]);
 
-    const lastPage = pages[pages.length - 1];
-    const lastMessage = lastPage[lastPage.length - 1];
+  useEffect(() => {
+    if (!pages?.length) return;
 
-    if (lastMessage?.optimistic) return scrollTo(bottomRef);
+    const newest = newestMessage(pages);
+    const newestId = newest?.id;
+    const pageCount = pages.length;
+    const prev = prevRef.current;
+    prevRef.current = { newestId, pageCount };
 
-    if (pages.length === 1) return scrollTo(bottomRef);
+    const scrollTo = (ref, behavior = "auto") => {
+      ref?.current?.scrollIntoView({ behavior, block: "end" });
+    };
 
-    if (lastPageBtm.current && isIntersectingTop)
-      return scrollTo(lastPageBtm, "instant");
+    if (!didInitRef.current) {
+      didInitRef.current = true;
+      scrollTo(bottomRef, "auto");
+      onAlignedBottom?.();
+      return;
+    }
 
-    // Putting the isIntersectingTop and isIntersectingBtm in the dependency array will cause an unusual behavior. So, we need to remove them.
-  }, [pages, bottomRef, lastPageBtm]);
+    const loadedOlder =
+      pageCount > prev.pageCount && newestId === prev.newestId;
+
+    if (loadedOlder) {
+      if (intersectingTopRef.current) {
+        scrollTo(lastPageBtm, "auto");
+      }
+      return;
+    }
+
+    if (newestId && newestId !== prev.newestId) {
+      if (newest?.optimistic || nearBottomRef.current) {
+        scrollTo(bottomRef, "auto");
+        onAlignedBottom?.();
+      } else {
+        onNewWhileAway?.();
+      }
+    }
+  }, [pages, bottomRef, lastPageBtm, onAlignedBottom, onNewWhileAway]);
 }
 
 export default useScrollBehavior;

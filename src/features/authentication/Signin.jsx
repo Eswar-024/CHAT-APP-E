@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useSignin } from "./useSignin";
 import Loader from "../../components/Loader";
 import { useUser } from "./useUser";
-import Heading from "../../components/Heading";
 import InputBox from "../../components/InputBox";
 import TextLink from "../../components/TextLink";
 import SubmitBtn from "../../components/SubmitBtn";
@@ -12,12 +11,13 @@ import FormContainer from "../../components/FormContainer";
 import { Controller, useForm } from "react-hook-form";
 import LogoLarge from "../../components/LogoLarge";
 import { APP_NAME } from "../../config";
+import { FiAtSign, FiLock } from "react-icons/fi";
 
 function Signin() {
-  document.title = APP_NAME + " - Sign in";
+  document.title = `${APP_NAME} - Sign in`;
   const { signin, isPending } = useSignin();
   const navigate = useNavigate();
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, isLoading } = useUser();
 
   const {
     control,
@@ -26,29 +26,25 @@ function Signin() {
     trigger,
   } = useForm({
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isLoading && isAuthenticated) {
       navigate("/chat", { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isLoading, navigate]);
 
-  const onSubmit = (data) => {
-    const { email, password } = data;
-
-    if (!email || !password) return;
+  const onSubmit = ({ username, password }) => {
+    if (!username || !password) return;
 
     signin(
-      { email, password },
+      { username: username.trim(), password },
       {
         onSuccess: () => {
-          navigate("/chat", {
-            replace: true,
-          });
+          navigate("/chat", { replace: true });
         },
       },
     );
@@ -56,72 +52,82 @@ function Signin() {
 
   return (
     <MainContainer>
-      <LogoLarge />
+      <div className="view-enter relative z-10 w-full max-w-md px-3 py-6" data-motion="auth">
+        <FormContainer onSubmit={handleSubmit(onSubmit)}>
+          <LogoLarge />
 
-      <FormContainer onSubmit={handleSubmit(onSubmit)}>
-        <Heading addClass="text-3xl">Sign in</Heading>
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+              Welcome back!
+            </h1>
+            <p className="mt-1 text-xs font-semibold text-slate-800 sm:text-sm">
+              Good to see you again.
+            </p>
+          </div>
 
-        <Controller
-          name="email"
-          control={control}
-          rules={{
-            required: "Enter your email.",
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-              message: "Invalid email. Please enter a valid email.",
-            },
-          }}
-          render={({ field }) => (
-            <InputBox
-              type="email"
-              value={field.value || ""}
-              onChange={field.onChange}
-              placeholder="Email"
-              htmlFor="email"
-              error={errors.email?.message}
-              onBlur={() => trigger("email")}
-              disabled={isPending}
+          <div className="space-y-1">
+            <Controller
+              name="username"
+              control={control}
+              rules={{ required: "Enter your username." }}
+              render={({ field }) => (
+                <InputBox
+                  type="text"
+                  label="Username"
+                  icon={FiAtSign}
+                  value={field.value || ""}
+                  onChange={field.onChange}
+                  placeholder="Username"
+                  htmlFor="username"
+                  autoComplete="username"
+                  error={errors.username?.message}
+                  onBlur={() => trigger("username")}
+                  disabled={isPending}
+                />
+              )}
             />
-          )}
-        />
 
-        <Controller
-          name="password"
-          control={control}
-          rules={{ required: "Enter a password." }}
-          render={({ field }) => (
-            <InputBox
-              type="password"
-              value={field.value || ""}
-              onChange={field.onChange}
-              placeholder="Password"
-              htmlFor="password"
-              error={errors.password?.message}
-              onBlur={() => trigger("password")}
-              disabled={isPending}
+            <Controller
+              name="password"
+              control={control}
+              rules={{ required: "Enter your password." }}
+              render={({ field }) => (
+                <InputBox
+                  type="password"
+                  label="Password"
+                  icon={FiLock}
+                  value={field.value || ""}
+                  onChange={field.onChange}
+                  placeholder="Password"
+                  htmlFor="password"
+                  autoComplete="current-password"
+                  error={errors.password?.message}
+                  onBlur={() => trigger("password")}
+                  disabled={isPending}
+                />
+              )}
             />
-          )}
-        />
+          </div>
 
-        <TextLink to="/reset-password" addClass="mb-4">
-          Forgot password?
-        </TextLink>
+          <SubmitBtn disabled={isPending}>
+            {isPending ? (
+              <div className="flex items-center justify-center gap-2">
+                <Loader size="small" />
+                <span>Signing In...</span>
+              </div>
+            ) : (
+              <span>Sign In</span>
+            )}
+          </SubmitBtn>
 
-        <SubmitBtn disabled={isPending}>
-          {isPending ? (
-            <>
-              <Loader size="small" />
-              <span className="ml-2">Signing in...</span>
-            </>
-          ) : (
-            <span>Sign in</span>
-          )}
-        </SubmitBtn>
-
-        <p>
-          Don't have an account? <TextLink to="/signup">Sign up</TextLink>
-        </p>
-      </FormContainer>
+          <p className="mt-6 text-center text-xs font-semibold text-slate-900 sm:text-sm">
+            Don&apos;t have an account?{" "}
+            <TextLink to="/signup" addClass="font-bold text-indigo-900 underline hover:text-indigo-950">
+              Sign up
+            </TextLink>
+          </p>
+        </FormContainer>
+      </div>
     </MainContainer>
   );
 }

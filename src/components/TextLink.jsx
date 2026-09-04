@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 function TextLink({ children, href, addClass, to }) {
-  const classes = `text-textAccent underline dark:text-textAccent-dark ${addClass}`;
+  const classes = `text-textAccent underline transition-opacity duration-150 hover:opacity-80 dark:text-textAccent-dark ${addClass}`;
 
   if (to)
     return (

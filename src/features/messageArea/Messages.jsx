@@ -1,10 +1,19 @@
 import { useMessages } from "./useMessages";
 import MessageItem from "./MessageItem";
-import { useEffect, useRef, useState } from "react";
-import Loader from "../../components/Loader";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useIntersectionObserver from "./useIntersectionObserver";
 import useScrollBehavior from "./useScrollBehavior";
 import ShortTextMessage from "../../components/ShortTextMessage";
+
+function MessageListSkeleton() {
+  return (
+    <div className="message-skel" aria-hidden="true">
+      <span className="skel-line skel-line--peer" />
+      <span className="skel-line skel-line--mine" />
+      <span className="skel-line skel-line--peer skel-line--short" />
+    </div>
+  );
+}
 
 function Messages() {
   const {
@@ -19,15 +28,23 @@ function Messages() {
   const topRef = useRef(null);
   const bottomRef = useRef();
   const lastPageBtm = useRef(null);
+  const listReadyRef = useRef(false);
   const [topElement, setTopElement] = useState(null);
+  const [showNewMessages, setShowNewMessages] = useState(false);
 
   const isIntersectingTop = useIntersectionObserver(topElement);
   const isIntersectingBtm = useIntersectionObserver(bottomRef.current);
 
-  // Top ref depends on hasNextPage so we need to update it when it changes
+  const onAlignedBottom = useCallback(() => {
+    setShowNewMessages(false);
+  }, []);
+
+  const onNewWhileAway = useCallback(() => {
+    setShowNewMessages(true);
+  }, []);
+
   useEffect(() => {
     if (topRef.current) {
-      // Set the top element after 1 second to avoid fetching the next page immediately when user loads the page first time.
       const timeoutId = setTimeout(() => {
         setTopElement(topRef.current);
       }, 1000);
@@ -36,78 +53,105 @@ function Messages() {
     }
   }, [hasNextPage]);
 
-  // Fetch next page when the bottom ref is in view
   useEffect(() => {
     if (isIntersectingTop && hasNextPage) {
       fetchNextPage();
     }
   }, [isIntersectingTop, hasNextPage, fetchNextPage]);
 
-  ////////////
-  // Scroll behavior hook
-  ////////////
   useScrollBehavior({
     pages,
     bottomRef,
     lastPageBtm,
     isIntersectingTop,
     isIntersectingBtm,
+    onAlignedBottom,
+    onNewWhileAway,
   });
 
-  /////////////
-  // show an error message when there is an error
-  /////////////
+  useLayoutEffect(() => {
+    if (pages?.[0]) {
+      listReadyRef.current = true;
+    }
+  }, [pages]);
 
-  if (error) return <ShortTextMessage>⚠️ {error.message}</ShortTextMessage>;
-
-  /////////////
-  // show a loader when fetching the first page
-  /////////////
-
-  if (isLoading)
+  if (error) {
     return (
-      <ShortTextMessage opacity={100}>
-        <Loader size="medium" text="Loading messages" />
+      <ShortTextMessage>
+        <span className="status-enter">⚠️ {error.message}</span>
       </ShortTextMessage>
     );
+  }
+
+  if (isLoading) {
+    return <MessageListSkeleton />;
+  }
+
+  function jumpToLatest() {
+    bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    setShowNewMessages(false);
+  }
 
   return (
-    <div className="grid grid-cols-1 items-end overflow-y-auto">
-      <div
-        tabIndex={-1}
-        className="mx-auto flex w-full max-w-3xl flex-col px-4"
-      >
-        {pages && !pages[0] && (
-          <ShortTextMessage>No messages yet</ShortTextMessage>
-        )}
+    <div className="messages-frame">
+      <div className="messages-scroller">
+        <div
+          tabIndex={-1}
+          className="mx-auto flex w-full min-w-0 max-w-3xl flex-col px-3 sm:px-4 xl:max-w-4xl"
+        >
+          {pages && !pages[0]?.length && (
+            <ShortTextMessage>No messages yet</ShortTextMessage>
+          )}
 
-        {pages && pages[0] && (
-          <>
-            {hasNextPage && (
-              <span ref={topRef}>{isFetchingNextPage && <Loader />}</span>
-            )}
-
-            {pages.map((page, index) =>
-              page.length ? (
-                <span key={index} className="flex w-full flex-col">
-                  {page.map((message) => (
-                    <MessageItem key={message.id} message={message} />
-                  ))}
-
-                  {index === 0 && <span ref={lastPageBtm}></span>}
+          {pages && pages[0]?.length > 0 && (
+            <>
+              {hasNextPage && (
+                <span ref={topRef} className="messages-history-hint">
+                  {isFetchingNextPage ? (
+                    <span className="skel-line skel-line--history" />
+                  ) : null}
                 </span>
-              ) : (
-                <span
-                  key={index}
-                  className="mx-auto my-4 h-2 w-2 select-none rounded bg-LightShade/50 opacity-50"
-                ></span>
-              ),
-            )}
-          </>
-        )}
+              )}
 
-        <span ref={bottomRef}></span>
+              {pages.map((page, index) =>
+                page.length ? (
+                  <span
+                    key={page[0]?.id || index}
+                    className="flex w-full flex-col"
+                  >
+                    {page.map((message) => (
+                      <MessageItem
+                        key={message.id}
+                        message={message}
+                        animateEntrance={listReadyRef.current}
+                      />
+                    ))}
+
+                    {index === 0 && <span ref={lastPageBtm}></span>}
+                  </span>
+                ) : (
+                  <span
+                    key={index}
+                    className="mx-auto my-4 h-2 w-2 select-none rounded bg-LightShade/50 opacity-50"
+                  ></span>
+                ),
+              )}
+            </>
+          )}
+
+          <span ref={bottomRef}></span>
+        </div>
       </div>
+
+      {showNewMessages ? (
+        <button
+          type="button"
+          className="new-messages-chip"
+          onClick={jumpToLatest}
+        >
+          New messages
+        </button>
+      ) : null}
     </div>
   );
 }

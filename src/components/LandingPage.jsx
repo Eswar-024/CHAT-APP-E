@@ -3,6 +3,7 @@ import { FaArrowRight, FaShieldAlt, FaMobile } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdChat, MdSecurity, MdSpeed } from "react-icons/md";
 import MainContainer from "./MainContainer";
+import { APP_NAME } from "../config";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -60,15 +61,13 @@ const LandingPage = () => {
         <div className="mx-auto max-w-5xl text-center">
           {/* Logo */}
           <div className="mb-8 flex justify-center">
-            <img
-              src="/images/convayto-logo.png"
-              alt="Convayto Logo"
-              className="h-24 w-auto sm:h-32"
-            />
+            <p className="select-none text-4xl font-bold tracking-wide sm:text-5xl">
+              {APP_NAME}
+            </p>
           </div>
 
           {/* Main Heading */}
-          <h1 className="mb-6 text-4xl font-bold sm:text-5xl lg:text-6xl">
+          <h1 className="mb-6 break-words text-4xl font-bold sm:text-5xl lg:text-6xl">
             Connect Instantly,
             <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
               {" "}
@@ -85,6 +84,7 @@ const LandingPage = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <button
+              type="button"
               onClick={() => navigate("/signup")}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 font-semibold text-white transition duration-300 hover:shadow-lg hover:shadow-blue-500/50"
             >
@@ -92,21 +92,13 @@ const LandingPage = () => {
               <FaArrowRight className="h-4 w-4" />
             </button>
             <button
+              type="button"
               onClick={() => navigate("/signin")}
               className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-current px-8 py-4 font-semibold transition duration-300 hover:bg-opacity-10 hover:backdrop-blur"
             >
               Sign In
               <FaArrowRight className="h-4 w-4" />
             </button>
-          </div>
-
-          {/* Hero Image */}
-          <div className="mt-12 sm:mt-16">
-            <img
-              src="/images/convayto-mockup.jpg"
-              alt="Convayto Mockup"
-              className="mx-auto w-full max-w-sm rounded-lg shadow-lg sm:max-w-md sm:shadow-xl md:max-w-2xl md:rounded-xl md:shadow-2xl"
-            />
           </div>
         </div>
       </section>
@@ -166,7 +158,7 @@ const LandingPage = () => {
           <div className="grid gap-12 sm:grid-cols-2 lg:gap-16">
             <div>
               <h2 className="mb-6 text-3xl font-bold sm:text-4xl">
-                Why Choose Convayto?
+                Why Choose {APP_NAME}?
               </h2>
               <ul className="space-y-4">
                 {[
@@ -190,7 +182,7 @@ const LandingPage = () => {
                   <div className="text-6xl text-white">💬</div>
                 </div>
                 <p className="text-lg font-semibold">
-                  Join thousands of users chatting on Convayto
+                  Join people messaging on {APP_NAME}
                 </p>
               </div>
             </div>
@@ -288,22 +280,12 @@ const LandingPage = () => {
               <h3 className="mb-4 font-semibold">About</h3>
               <ul className="text-textSecondary dark:text-textSecondary-dark space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/about"
+                  <Link
+                    to="/about"
                     className="hover:text-textPrimary dark:hover:text-textPrimary-dark"
                   >
-                    About Convayto
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/CodeWithAlamin/Convayto"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-textPrimary dark:hover:text-textPrimary-dark"
-                  >
-                    GitHub
-                  </a>
+                    About
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -329,35 +311,30 @@ const LandingPage = () => {
               </ul>
             </div>
             <div>
-              <h3 className="mb-4 font-semibold">Connect</h3>
+              <h3 className="mb-4 font-semibold">Account</h3>
               <ul className="text-textSecondary dark:text-textSecondary-dark space-y-2 text-sm">
                 <li>
-                  <a
-                    href="https://x.com/CodeWithAlamin"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to="/signin"
                     className="hover:text-textPrimary dark:hover:text-textPrimary-dark"
                   >
-                    Twitter
-                  </a>
+                    Sign In
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="https://www.linkedin.com/in/CodeWithAlamin"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to="/signup"
                     className="hover:text-textPrimary dark:hover:text-textPrimary-dark"
                   >
-                    LinkedIn
-                  </a>
+                    Sign Up
+                  </Link>
                 </li>
               </ul>
             </div>
           </div>
           <div className="text-textSecondary dark:text-textSecondary-dark mt-8 border-t border-bgSecondary pt-8 text-center text-sm dark:border-bgSecondary-dark">
             <p>
-              © {new Date().getFullYear()} Convayto. All rights reserved.
-              Licensed under Apache 2.0
+              © Copyright by Alamin. Licensed under the Apache License 2.0.
             </p>
           </div>
         </div>

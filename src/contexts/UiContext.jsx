@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { DARK_THEME, LIGHT_THEME, LOCAL_STORAGE_KEY } from "../config";
 
@@ -11,6 +12,11 @@ const InitialState = {
   isFriendsSidebarOpen: false,
   isMenuOpen: false,
   searchQuery: "",
+  cardSize: "standard",
+  cardTheme: "rainbow",
+  cardZoom: 100,
+  cardAlignment: "full",
+  cardShape: "rounded",
 };
 
 function reducer(state, action) {
@@ -59,6 +65,36 @@ function reducer(state, action) {
         isDarkMode: action.payload,
       };
 
+    case "UPDATE_CARD_SIZE":
+      return {
+        ...state,
+        cardSize: action.payload,
+      };
+
+    case "UPDATE_CARD_THEME":
+      return {
+        ...state,
+        cardTheme: action.payload,
+      };
+
+    case "UPDATE_CARD_ZOOM":
+      return {
+        ...state,
+        cardZoom: action.payload,
+      };
+
+    case "UPDATE_CARD_ALIGNMENT":
+      return {
+        ...state,
+        cardAlignment: action.payload,
+      };
+
+    case "UPDATE_CARD_SHAPE":
+      return {
+        ...state,
+        cardShape: action.payload,
+      };
+
     case "CLOSE_FRIEND_SIDEBAR":
       return {
         ...state,
@@ -87,6 +123,11 @@ function reducer(state, action) {
       return {
         ...InitialState,
         isDarkMode: state.isDarkMode,
+        cardSize: state.cardSize,
+        cardTheme: state.cardTheme,
+        cardZoom: state.cardZoom,
+        cardAlignment: state.cardAlignment,
+        cardShape: state.cardShape,
       };
 
     default:
@@ -104,11 +145,15 @@ function UiProvider({ children }) {
       isFriendsSidebarOpen,
       isMenuOpen,
       searchQuery,
+      cardSize,
+      cardTheme,
+      cardZoom,
+      cardAlignment,
+      cardShape,
     },
     dispatch,
   ] = useReducer(reducer, InitialState);
-  ///////////////////
-  // Sidebar functions
+
   function openSidebar() {
     dispatch({ type: "OPEN_SIDEBAR" });
   }
@@ -117,8 +162,6 @@ function UiProvider({ children }) {
     dispatch({ type: "CLOSE_SIDEBAR" });
   }
 
-  ///////////////////
-  // Account View functions
   function popAccountViewBack() {
     dispatch({ type: "CLOSE_ACCOUNT_VIEW" });
     window.removeEventListener("popstate", popAccountViewBack);
@@ -136,8 +179,6 @@ function UiProvider({ children }) {
     window.removeEventListener("popstate", popAccountViewBack);
   }
 
-  ///////////////////
-  // Search View
   function popSearchViewBack() {
     dispatch({ type: "CLOSE_SEARCH_VIEW" });
     window.removeEventListener("popstate", popSearchViewBack);
@@ -145,21 +186,17 @@ function UiProvider({ children }) {
 
   function openSearchView() {
     dispatch({ type: "OPEN_SEARCH_VIEW" });
-    // we need to stop pushing the same url to history stack when search view is already open. Otherwise, it will keep pushing the same url to history stack every time the user clicks on the search bar.
     !isSearchViewOpen &&
       window.history.pushState(null, null, window.location.href);
     window.addEventListener("popstate", popSearchViewBack);
   }
 
   function closeSearchView({ back = true } = {}) {
-    // if back is false, then don't go back in history stack when closing the search view (used in user search view). It is needed when user click on the back button from the app because that button is responsible for both menu and going back when search view is open.
     back && window.history.back();
     dispatch({ type: "CLOSE_SEARCH_VIEW" });
     window.removeEventListener("popstate", popSearchViewBack);
   }
 
-  ///////////////////
-  // Friends Sidebar
   function popFriendSidebarBack() {
     dispatch({ type: "CLOSE_FRIEND_SIDEBAR" });
     window.removeEventListener("popstate", popFriendSidebarBack);
@@ -167,39 +204,27 @@ function UiProvider({ children }) {
 
   function openFriendSidebar() {
     dispatch({ type: "OPEN_FRIEND_SIDEBAR" });
-
     window.history.pushState(null, null, window.location.href);
     window.addEventListener("popstate", popFriendSidebarBack);
   }
 
   function closeFriendSidebar() {
     dispatch({ type: "CLOSE_FRIEND_SIDEBAR" });
-
     window.history.back();
     window.removeEventListener("popstate", popFriendSidebarBack);
   }
 
-  ///////////////////
-  // Menu functions
   function toggleMenu() {
     dispatch({ type: "TOGGLE_MENU" });
   }
 
-  ///////////////////
-  // Search functions
   function updateSearchQuery(query) {
     dispatch({ type: "UPDATE_SEARCH_QUERY", payload: query });
   }
 
-  ///////////////////
-  // Reset UI
   function resetUi() {
     dispatch({ type: "RESET" });
   }
-
-  ///////////////////
-  // Dark Mode
-  ///////////////////
 
   function updateDarkMode(newMode) {
     dispatch({ type: "UPDATE_DARK_MODE", payload: newMode });
@@ -213,36 +238,78 @@ function UiProvider({ children }) {
     }
   }
 
-  // Update the dark mode setting when the visitor first visits the site
   useEffect(() => {
-    // Check if the user has set dark mode in local storage
     const userPrefersDarkMode = localStorage.getItem(LOCAL_STORAGE_KEY);
     const systemPrefersDarkMode = window.matchMedia(
       "(prefers-color-scheme: dark)",
     ).matches;
 
-    let isDarkMode;
-
+    let isDark;
     if (userPrefersDarkMode) {
-      // If user has set dark mode in local storage, use that setting
-      isDarkMode = userPrefersDarkMode === DARK_THEME;
+      isDark = userPrefersDarkMode === DARK_THEME;
     } else if (systemPrefersDarkMode) {
-      // If user has not set dark mode in local storage, check the system preference
-
-      // Use the system preference
-      isDarkMode = systemPrefersDarkMode;
+      isDark = systemPrefersDarkMode;
     } else {
-      // If user has not set dark mode in local storage and system preference is not dark mode, use light mode
-      isDarkMode = false;
+      isDark = false;
     }
 
-    // Update the dark mode setting
-    updateDarkMode(isDarkMode);
+    updateDarkMode(isDark);
+
+    const savedSize = localStorage.getItem("card_size");
+    if (savedSize) {
+      dispatch({ type: "UPDATE_CARD_SIZE", payload: savedSize });
+    }
+
+    const savedTheme = localStorage.getItem("card_theme");
+    if (savedTheme) {
+      dispatch({ type: "UPDATE_CARD_THEME", payload: savedTheme });
+    }
+
+    const savedZoom = localStorage.getItem("card_zoom");
+    if (savedZoom) {
+      dispatch({ type: "UPDATE_CARD_ZOOM", payload: Number(savedZoom) });
+    }
+
+    const savedAlign = localStorage.getItem("card_alignment");
+    if (savedAlign) {
+      dispatch({ type: "UPDATE_CARD_ALIGNMENT", payload: savedAlign });
+    }
+
+    const savedShape = localStorage.getItem("card_shape");
+    if (savedShape) {
+      dispatch({ type: "UPDATE_CARD_SHAPE", payload: savedShape });
+    }
   }, []);
 
   const toggleDarkMode = () => {
     const newMode = !isDarkMode;
     updateDarkMode(newMode);
+  };
+
+  const setCardSize = (size) => {
+    dispatch({ type: "UPDATE_CARD_SIZE", payload: size });
+    localStorage.setItem("card_size", size);
+  };
+
+  const setCardTheme = (theme) => {
+    dispatch({ type: "UPDATE_CARD_THEME", payload: theme });
+    localStorage.setItem("card_theme", theme);
+  };
+
+  const setCardZoom = (zoomVal) => {
+    const clamped = Math.max(70, Math.min(140, Number(zoomVal)));
+    dispatch({ type: "UPDATE_CARD_ZOOM", payload: clamped });
+    localStorage.setItem("card_zoom", String(clamped));
+  };
+
+  const setCardAlignment = (align) => {
+    dispatch({ type: "UPDATE_CARD_ALIGNMENT", payload: align });
+    localStorage.setItem("card_alignment", align);
+  };
+
+  const setCardShape = (shape) => {
+    dispatch({ type: "UPDATE_CARD_SHAPE", payload: shape });
+    localStorage.setItem("card_shape", shape);
   };
 
   const value = {
@@ -262,6 +329,21 @@ function UiProvider({ children }) {
 
     isDarkMode,
     toggleDarkMode,
+
+    cardSize,
+    setCardSize,
+
+    cardTheme,
+    setCardTheme,
+
+    cardZoom,
+    setCardZoom,
+
+    cardAlignment,
+    setCardAlignment,
+
+    cardShape,
+    setCardShape,
 
     isFriendsSidebarOpen,
     closeFriendSidebar,

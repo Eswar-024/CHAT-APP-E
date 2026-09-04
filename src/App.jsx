@@ -1,21 +1,18 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./styles/index.css";
 import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Signup from "./features/authentication/Signup";
 import Signin from "./features/authentication/Signin";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MessageView from "./features/messageArea/MessageView";
+import DefaultView from "./features/sideBar/DefaultView";
+import ProfilePage from "./features/userProfile/ProfilePage";
 import { UiProvider } from "./contexts/UiContext";
-import NewPasswordPage from "./features/authentication/NewPasswordPage";
-import ResetPasswordPage from "./features/authentication/ResetPasswordPage";
 import NotFound from "./components/NotFound";
 import { Toaster } from "react-hot-toast";
-import AccountConfirmation from "./components/AccountConfirmation";
 import AllRoutesWrapper from "./components/AllRoutesWrapper";
 import AboutPage from "./components/AboutPage";
-import LandingPage from "./components/LandingPage";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsOfService from "./components/TermsOfService";
 
@@ -43,12 +40,18 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Toaster
           position="top-center"
+          gutter={10}
           toastOptions={{
+            className: "app-toast",
+            duration: 3200,
+            success: {
+              duration: 2600,
+            },
             error: {
               duration: 5000,
             },
             style: {
-              maxWidth: "500px",
+              maxWidth: "min(500px, calc(100vw - 2rem))",
             },
           }}
         />
@@ -56,26 +59,22 @@ function App() {
         <BrowserRouter>
           <AllRoutesWrapper>
             <Routes>
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<Navigate to="/signin" replace />} />
               <Route
-                path="/chat"
                 element={
                   <ProtectedRoute>
                     <AppLayout />
                   </ProtectedRoute>
                 }
               >
+                <Route path="/chat" element={<DefaultView />} />
                 <Route path="/chat/:userId" element={<MessageView />} />
+                <Route path="/profile" element={<ProfilePage />} />
               </Route>
 
               <Route path="signup" element={<Signup />} />
               <Route path="signin" element={<Signin />} />
-              <Route path="new-password" element={<NewPasswordPage />} />
-              <Route path="reset-password" element={<ResetPasswordPage />} />
-              <Route
-                path="account-confirmation"
-                element={<AccountConfirmation />}
-              />
+              <Route path="login" element={<Signin />} />
               <Route path="about" element={<AboutPage />} />
               <Route path="privacy" element={<PrivacyPolicy />} />
               <Route path="terms" element={<TermsOfService />} />

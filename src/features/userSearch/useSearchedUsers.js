@@ -9,9 +9,8 @@ export function useSearchedUsers() {
   const { searchQuery } = useUi();
   const cleanSearchQuery = searchQuery.trim();
 
-  const {
-    user: { id },
-  } = useUser();
+  const { user } = useUser();
+  const id = user?.id;
   const [users, setUsers] = useState([]);
   const [isShortQuery, setIsShortQuery] = useState(true);
 
@@ -70,6 +69,6 @@ export function useSearchedUsers() {
     [cleanSearchQuery],
   );
 
-  const filteredUsers = users?.filter((user) => user.id !== id);
+  const filteredUsers = users?.filter((person) => person.id !== id);
   return { users: filteredUsers, isShortQuery, isLoading, error };
 }

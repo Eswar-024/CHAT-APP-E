@@ -10,8 +10,13 @@ export function useUpdateUser() {
     onMutate: () => {
       toast.loading("Updating...");
     },
-    onSuccess: () => {
-      quryClient.invalidateQueries("user");
+    onSuccess: (data) => {
+      toast.dismiss();
+      if (data?.user) {
+        quryClient.setQueryData(["user"], data);
+      } else {
+        quryClient.invalidateQueries({ queryKey: ["user"] });
+      }
     },
     onError: (error) => {
       toast.dismiss();

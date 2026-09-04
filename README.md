@@ -1,20 +1,10 @@
 <div align="center">
 
-  <img src="./public/images/convayto-logo.png" alt="Convayto logo" width="230" height="auto">
+  <h1>CHAT APP</h1>
 
-  <h3>
-    <a href="https://convayto.vercel.app">
-      <strong>Live Demo</strong>
-    </a>
-  </h3>
-
-  <p>A modern real-time chat application built with React and Supabase</p>
+  <p>A real-time messaging application</p>
 
   <div align="center">
-    <a href="https://github.com/CodeWithAlamin/Convayto/issues">Report Bug</a>
-    •
-    <a href="https://github.com/CodeWithAlamin/Convayto/pulls">Submit PR</a>
-    •
     <a href="CONTRIBUTING.md">Contributing Guide</a>
   </div>
 
@@ -27,22 +17,14 @@
 <!-- Badges -->
 <div align="center">
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/CodeWithAlamin?style=flat&logo=x)](https://x.com/CodeWithAlamin)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/CodeWithAlamin)
-![version](https://img.shields.io/github/package-json/v/CodeWithAlamin/Convayto?color=blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
 </div>
 
 <p align="center">
-  <strong>Convayto</strong> is an open-source real-time chat application demonstrating modern React and Supabase patterns. 
-  Perfect for learning full-stack web development—and contributions are always welcome!
+  <strong>CHAT APP</strong> is a real-time messaging application with authentication, profiles, and private conversations.
+  It is derived from an Apache License 2.0 open-source project originally created by Alamin. Original copyright notices are retained.
 </p>
-
-<!-- Screenshot -->
-<a align="center" href="https://convayto.vercel.app">
-  ![Convayto Screenshot](./public/images/convayto-mockup.jpg)
-</a>
 
 ## ✨ Features
 
@@ -56,20 +38,16 @@
 
 ## 🚀 Quick Start
 
-### Try the Live Demo
-
-Visit [convayto.vercel.app](https://convayto.vercel.app) to see it in action.
-
 ### Run Locally (For Development)
 
-**Prerequisites:** Node.js 16+, npm, Git, Supabase account (free tier works!)
+**Prerequisites:** Node.js 16+, npm, Git
 
 **Steps:**
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/CodeWithAlamin/Convayto.git
-cd Convayto
+git clone <this-repository>
+cd <this-repository>
 npm install
 
 # 2. Set up environment variables
@@ -188,36 +166,24 @@ See [Contributing Guide](CONTRIBUTING.md) for details on how to help!
 
 ## License
 
-Licensed under the [Apache License 2.0](LICENSE.md). You're free to use, modify, and distribute this code.
+Licensed under the [Apache License 2.0](LICENSE.md). Original copyright notices are retained.
 
-## Author
+## Original copyright
 
-**Alamin** - Full-stack web developer learning and building in public
-
-- Twitter: [@CodeWithAlamin](https://x.com/CodeWithAlamin)
-- LinkedIn: [CodeWithAlamin](https://www.linkedin.com/in/CodeWithAlamin)
-- GitHub: [@CodeWithAlamin](https://github.com/CodeWithAlamin)
+Original portions of this codebase were created by **Alamin** and are licensed under Apache License 2.0.
 
 ## Contributors
 
-Huge thanks to everyone who has contributed to Convayto!
-
-[View all contributors](https://github.com/CodeWithAlamin/Convayto/graphs/contributors)
-
-Want to join? See [CONTRIBUTING.md](CONTRIBUTING.md) to get started!
+See [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
 ## Support
 
-- [Open an issue](https://github.com/CodeWithAlamin/Convayto/issues) for bugs or questions
-- [Start a discussion](https://github.com/CodeWithAlamin/Convayto/discussions) for ideas
 - Read the [architecture docs](ARCHITECTURE.md) for questions about code
 
 ---
 
 <div align="center">
 
-Made as a learning project
-
-[Star this repo](https://github.com/CodeWithAlamin/Convayto) if you find it helpful!
+Licensed under Apache 2.0
 
 </div>

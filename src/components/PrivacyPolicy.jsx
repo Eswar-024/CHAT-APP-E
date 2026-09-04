@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-semibold">1. Introduction</h2>
           <p>
-            Convayto ("we", "our", or "us") is committed to protecting your
+            CHAT APP ("we", "our", or "us") is committed to protecting your
             privacy. This Privacy Policy explains how we collect, use, and
             protect your information when you use our application.
           </p>
@@ -45,7 +45,7 @@ const PrivacyPolicy = () => {
           </h2>
           <p className="mb-3">We use collected information to:</p>
           <ul className="list-disc space-y-2 pl-6">
-            <li>Provide and maintain the Convayto service</li>
+            <li>Provide and maintain the CHAT APP service</li>
             <li>Authenticate your account and manage your session</li>
             <li>Deliver messages between users</li>
             <li>Improve application functionality and user experience</li>
@@ -105,23 +105,15 @@ const PrivacyPolicy = () => {
           <p>
             We may update this Privacy Policy periodically. Changes will be
             effective when posted to the application. Your continued use of
-            Convayto constitutes acceptance of the updated policy.
+            CHAT APP constitutes acceptance of the updated policy.
           </p>
         </section>
 
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-semibold">9. Contact Us</h2>
           <p>
-            For questions about this Privacy Policy, please open an issue on our{" "}
-            <a
-              href="https://github.com/CodeWithAlamin/Convayto"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
-            >
-              GitHub repository
-            </a>
-            .
+            For questions about this Privacy Policy, please contact the
+            application operator.
           </p>
         </section>
 

@@ -1,17 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { signin as ApiSignin } from "./apiAuth";
+import { signin as apiSignin } from "./apiAuth";
 import toast from "react-hot-toast";
 
 export function useSignin() {
   const queryClient = useQueryClient();
 
   const { mutate: signin, isPending } = useMutation({
-    mutationFn: ({ email, password }) => ApiSignin({ email, password }),
+    mutationFn: ({ username, password }) =>
+      apiSignin({ username, password }),
     onMutate: () => {
       toast.loading("Signing in...");
     },
     onSuccess: (data) => {
-      queryClient.setQueriesData(["user"], data);
+      queryClient.setQueryData(["user"], data);
       toast.dismiss();
     },
     onError: (error) => {

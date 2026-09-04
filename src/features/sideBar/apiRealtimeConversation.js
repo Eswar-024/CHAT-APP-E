@@ -1,63 +1,40 @@
-import supabase from "../../services/supabase";
-import { getUserById } from "../authentication/apiAuth";
+import { getSocket } from "../../lib/socket";
 
-async function getUpdatedPayload({ payload, myUserId }) {
-  if (payload.eventType === "INSERT") {
-    const friendId =
-      payload.new.user1_id === myUserId
-        ? payload.new.user2_id
-        : payload.new.user1_id;
+export function subscribeRealtimeConversation({ callback, onReconnect }) {
+  const socket = getSocket();
+  let sawDisconnect = false;
 
-    const friendInfo = await getUserById(friendId);
-
-    const updatedPaylod = {
-      ...payload,
-      new: { friendInfo, ...payload.new },
-    };
-
-    return updatedPaylod;
-  } else if (payload.eventType === "UPDATE") {
-    const updatedPaylod = {
-      ...payload,
-      new: { ...payload.new },
-    };
-
-    return updatedPaylod;
+  function onUpdated(payload) {
+    if (!payload?.conversationId) return;
+    callback({
+      conversationId: payload.conversationId,
+      last_message: payload.last_message,
+    });
   }
-}
 
-export function subscribeRealtimeConversation({ myUserId, callback }) {
-  const roomName = myUserId;
-  const subscription = supabase
-    .channel(roomName)
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "conversations",
-        filter: `user1_id=eq.${myUserId}`,
-      },
-      async (payload) => {
-        const updatedPayload = await getUpdatedPayload({ payload, myUserId });
-        callback(updatedPayload);
-      },
-    )
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "conversations",
-        filter: `user2_id=eq.${myUserId}`,
-      },
-      async (payload) => {
-        const updatedPayload = await getUpdatedPayload({ payload, myUserId });
-        callback(updatedPayload);
-      },
-    )
-    .subscribe();
+  function onConnect() {
+    if (sawDisconnect) {
+      onReconnect?.();
+    }
+  }
 
-  // console.log("subscribed conversations", myUserId);
-  return subscription;
+  function onDisconnect() {
+    sawDisconnect = true;
+  }
+
+  socket.on("conversation:updated", onUpdated);
+  socket.on("connect", onConnect);
+  socket.on("disconnect", onDisconnect);
+
+  if (!socket.connected) {
+    socket.connect();
+  }
+
+  return {
+    unsubscribe() {
+      socket.off("conversation:updated", onUpdated);
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    },
+  };
 }

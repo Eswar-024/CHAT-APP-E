@@ -1,14 +1,31 @@
-import { Outlet } from "react-router-dom";
-import LeftSideBar from "../features/sideBar/LeftSideBar";
+import { getSocket } from "../lib/socket";
+import { useUser } from "../features/authentication/useUser";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import MainContainer from "./MainContainer";
+import PageTransition from "./PageTransition";
 
 function AppLayout() {
-  return (
-    <MainContainer>
-      <div className="grid w-full grid-cols-[auto_1fr]">
-        <LeftSideBar />
+  const { isAuthenticated } = useUser();
+  const { pathname } = useLocation();
 
-        <Outlet />
+  useEffect(() => {
+    if (!isAuthenticated) return undefined;
+
+    const socket = getSocket();
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    return undefined;
+  }, [isAuthenticated]);
+
+  return (
+    <MainContainer className="inbox-canvas overflow-y-auto">
+      <div className="relative min-h-screen-safe w-full min-w-0 flex flex-col">
+        <PageTransition key={pathname} className="min-h-full flex-1 flex flex-col">
+          <Outlet />
+        </PageTransition>
       </div>
     </MainContainer>
   );

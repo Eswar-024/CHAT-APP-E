@@ -1,10 +1,10 @@
 # Database Design
 
-This document details the Convayto database schema, design decisions, and security measures.
+This document details the CHAT APP database schema, design decisions, and security measures.
 
 ## Overview
 
-Convayto uses **Supabase** (PostgreSQL) for data storage with a focus on simplicity and security.
+CHAT APP uses **Supabase** (PostgreSQL) for data storage with a focus on simplicity and security.
 
 **Design Philosophy:**
 
@@ -410,7 +410,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key_here
 
 ## Backing Up Your Data
 
-To backup Convayto data:
+To backup CHAT APP data:
 
 ```bash
 # Using Supabase CLI

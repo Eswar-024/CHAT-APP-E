@@ -1,6 +1,6 @@
 # Architecture & Code Organization
 
-This document explains how Convayto is organized and the patterns used throughout the codebase.
+This document explains how CHAT APP is organized and the patterns used throughout the codebase.
 
 ## Project Structure
 
@@ -422,7 +422,7 @@ const MessageView = lazy(() => import('./MessageView'))
 All environment-specific settings are in `config.js`:
 
 ```javascript
-export const APP_NAME = "Convayto";
+export const APP_NAME = "CHAT APP";
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const MIN_PASSWORD_LENGTH = 8;
 ```
@@ -431,7 +431,7 @@ This allows quick changes without searching the codebase.
 
 ## Testing Strategy
 
-Currently, Convayto doesn't have automated tests. This is a great area to contribute!
+Currently, CHAT APP doesn't have automated tests. This is a great area to contribute!
 
 Recommended approach:
 

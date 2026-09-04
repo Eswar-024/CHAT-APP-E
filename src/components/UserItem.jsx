@@ -28,11 +28,12 @@ function UserItem({
         isActiveUser
           ? "pointer-events-none bg-gradient-to-r text-textPrimary-dark sm:from-bgAccentDim sm:to-bgAccent dark:sm:from-bgAccentDim-dark dark:sm:to-bgAccent-dark"
           : "hover:bg-LightShade/20"
-      } flex cursor-pointer select-none items-center gap-2 rounded-lg p-2 `}
+      } flex min-w-0 cursor-pointer select-none items-center gap-2 rounded-lg p-2`}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
+      aria-label={`Chat with ${name}`}
     >
       <span className="h-12 w-12  flex-shrink-0 overflow-hidden rounded-full">
         {avatar ? (
@@ -51,7 +52,7 @@ function UserItem({
         )}
       </span>
 
-      <span className="flex flex-col overflow-hidden ">
+      <span className="flex min-w-0 flex-col overflow-hidden">
         <span className="truncate font-bold">{name}</span>
 
         <span className="truncate text-sm opacity-70">{subtext}</span>

@@ -5,7 +5,7 @@ import { APP_NAME, APP_VERSION } from "../config";
 
 function Menu({ children }) {
   return (
-    <div className="fadeIn absolute left-4 top-12 z-50 w-60 divide-y divide-LightShade/20 rounded-lg bg-bgPrimary p-2 shadow-[0_10px_60px_rgba(0,0,0,0.3)] dark:divide-LightShade/50  dark:bg-bgTertiary">
+    <div className="fadeIn absolute left-2 top-12 z-50 w-60 max-w-[calc(100vw-1rem)] divide-y divide-LightShade/20 rounded-lg bg-bgPrimary p-2 shadow-[0_10px_60px_rgba(0,0,0,0.3)] dark:divide-LightShade/50 dark:bg-bgTertiary">
       {children}
     </div>
   );
@@ -108,12 +108,7 @@ function Footer() {
   return (
     <div className="px-4 py-3">
       <div className="flex items-center justify-center gap-2 truncate text-center text-xs">
-        <img
-          className="h-6 rounded-full border-2 border-LightShade/20"
-          src="/images/convayto-logo-short-circle.svg"
-          alt="Logo"
-        />
-        <span className=" opacity-60">
+        <span className="opacity-60">
           {APP_NAME} {APP_VERSION}
         </span>
       </div>

@@ -6,6 +6,42 @@ export function scrollToBottom(ref) {
   });
 }
 
+export function formatCardTime(rawDate) {
+  if (!rawDate) return "";
+
+  const date = new Date(rawDate);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfThatDay = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
+  const diffInDays = Math.round((startOfToday - startOfThatDay) / 86400000);
+
+  if (diffInDays === 0) {
+    return date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  }
+
+  if (diffInDays === 1) return "Yesterday";
+
+  if (diffInDays < 7) {
+    return date.toLocaleDateString([], { weekday: "short" });
+  }
+
+  return date.toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+    year: now.getFullYear() === date.getFullYear() ? undefined : "numeric",
+  });
+}
+
 export function formatTime(rawDate) {
   if (!rawDate) return "-- : --";
 
