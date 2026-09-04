@@ -1,189 +1,102 @@
 <div align="center">
 
-  <h1>CHAT APP</h1>
+  <h1>⚡ CHAT-APP E</h1>
 
-  <p>A real-time messaging application</p>
+  <p><strong>A Modern, Feature-Rich Real-Time Messaging Application</strong></p>
 
-  <div align="center">
-    <a href="CONTRIBUTING.md">Contributing Guide</a>
+  <p>Made with 💓 by <strong>Eswar</strong></p>
+
+  <div>
+    <a href="https://github.com/Eswar-024/CHAT-APP-E">GitHub Repository</a> •
+    <a href="https://instagram.com/20_eswar_04">Instagram (@20_eswar_04)</a>
   </div>
 
-  <hr>
+  <br />
+
+  ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
+  ![React](https://img.shields.io/badge/Frontend-React%2018-sky)
+  ![Node.js](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-green)
+  ![Socket.IO](https://img.shields.io/badge/Realtime-Socket.IO-black)
 
 </div>
 
-<br/>
+---
 
-<!-- Badges -->
-<div align="center">
+## 🌟 Key Features
 
-![License](https://img.shields.io/badge/License-Apache%202.0-blue)
+* 📌 **Free Cursor Sticky Note Placement**: Click or touch & drag any individual chat card anywhere on your screen (Up, Down, Left, Right) with smooth 60fps GPU acceleration (`translate3d`).
+* 📍 **Per-Chat Alignment Controls**: Independently position individual chat cards to **⬅ Left**, **↔ Center**, or **➡ Right** without affecting other cards.
+* 🔷 **8 Customizable Card Shapes**: Choose default or per-chat custom shapes including **Rounded**, **Pill**, **Circle**, **Oval Capsule**, **Square**, **Asymmetric Leaf**, **Comic Star**, and **Cloud Bubble**.
+* 🎨 **Color & Zoom Customization**: Custom pastel palette for each card, box zoom magnification scaling (70% - 140%), and instant Light / Dark mode toggle.
+* 🛡️ **Resizing Protection**: Drag-resize bottom-right corners without triggering accidental chat navigation.
+* ⚡ **Realtime Messaging System**: Instant web socket communication with unread message badges, online status indicators, and mute controls.
+* 📱 **Responsive Design**: Ultra-responsive, vibrant cartoon aesthetic optimized for phones, tablets, and desktop displays.
 
-</div>
+---
 
-<p align="center">
-  <strong>CHAT APP</strong> is a real-time messaging application with authentication, profiles, and private conversations.
-  It is derived from an Apache License 2.0 open-source project originally created by Alamin. Original copyright notices are retained.
-</p>
+## 🛠️ Tech Stack
 
-## ✨ Features
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React 18, Vite |
+| **Styling** | Vanilla CSS, Tailwind CSS, Custom Tokens |
+| **Realtime** | Socket.IO WebSockets |
+| **Backend API** | Node.js, Express.js |
+| **Database** | PostgreSQL |
+| **Icons & UI** | React Icons (`react-icons/fi`, `react-icons/ri`) |
 
-- **Secure Authentication** - Email verification, password reset, session management
-- **Real-Time Messaging** - Instant message delivery with Supabase Realtime
-- **Profile Management** - Customizable profiles with avatar support
-- **Friend Search** - Discover and connect with other users
-- **Responsive Design** - Perfect on desktop, tablet, and mobile
-- **Dark Mode** - Light and dark theme support
-- **Optimized Performance** - Infinite pagination and smart data prefetching
+---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Development)
 
-### Run Locally (For Development)
-
-**Prerequisites:** Node.js 16+, npm, Git
-
-**Steps:**
-
+### 1. Clone the repository
 ```bash
-# 1. Clone and install
-git clone <this-repository>
-cd <this-repository>
+git clone https://github.com/Eswar-024/CHAT-APP-E.git
+cd CHAT-APP-E
+```
+
+### 2. Install dependencies
+```bash
 npm install
+```
 
-# 2. Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your Supabase credentials
-
-# 3. Start development server
+### 3. Start development server
+```bash
 npm run dev
-
-# 4. Open http://localhost:5173
 ```
 
-**Get your Supabase credentials:**
+Open your browser at `http://localhost:3000` to view the app!
 
-1. Create account at [supabase.com](https://supabase.com)
-2. Create a new project
-3. Go to Settings → API
-4. Copy `URL` and `Anon` key into `.env.local`
+---
 
-For more detailed setup instructions, see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## 📚 Documentation
-
-| Document                                 | Purpose                                                |
-| ---------------------------------------- | ------------------------------------------------------ |
-| [CONTRIBUTING.md](CONTRIBUTING.md)       | How to contribute, development setup, code style       |
-| [ARCHITECTURE.md](ARCHITECTURE.md)       | Codebase organization, design patterns, best practices |
-| [DATABASE_DESIGN.md](DATABASE_DESIGN.md) | Database schema, security, data flow                   |
-
-## 🛠 Tech Stack
-
-| Category     | Technology                           |
-| ------------ | ------------------------------------ |
-| **Frontend** | React 18, Vite                       |
-| **Styling**  | Tailwind CSS                         |
-| **Routing**  | React Router v6                      |
-| **Data**     | React Query, Supabase Realtime       |
-| **Forms**    | React Hook Form                      |
-| **Backend**  | Supabase (PostgreSQL, Auth, Storage) |
-| **UI**       | react-hot-toast, react-icons         |
-
-## 📁 Project Structure
-
-```
-src/
-├── components/          # Reusable UI components
-├── features/            # Feature modules (auth, messaging, etc.)
-├── contexts/            # Global state (UI Context)
-├── services/            # Supabase integration
-├── utils/               # Utilities and custom hooks
-├── styles/              # Tailwind and global CSS
-├── config.js            # App configuration
-└── App.jsx              # Main app with routing
-```
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed structure and patterns.
-
-## 🔒 Security
-
-- **Row-Level Security**: Database enforces access control
-- **Authentication**: Supabase Auth with email verification
-- **Protected Routes**: Only authenticated users access `/chat`
-- **Open Source**: Code transparency for security review
-
-For detailed security info, see [DATABASE_DESIGN.md](DATABASE_DESIGN.md).
-
-## 🎯 Learning Goals
-
-This project demonstrates:
-
-- Real-time data synchronization
-- Modern React patterns (hooks, custom hooks, context)
-- Form validation and error handling
-- Responsive design
-- Database design with Row-Level Security
-- API integration and data fetching
-- User authentication flows
-
-Perfect for learning full-stack web development!
-
-## 🤝 Contributing
-
-We'd love your help! Whether it's:
-
-- Reporting bugs
-- Adding features
-- Improving documentation
-- UI/UX improvements
-- Accessibility fixes
-
-**Start here:** [CONTRIBUTING.md](CONTRIBUTING.md)
-
-### Common Tasks
+## 📦 Production Build & Vercel Deployment
 
 ```bash
-npm run dev        # Start development
-npm run build      # Build for production
-npm run lint       # Check code style
-npm run preview    # Preview production build
+# Generate production bundle
+npm run build
+
+# Preview build locally
+npm run preview
 ```
 
-## 📋 Future Roadmap
+### Deploying on Vercel:
+1. Push your changes to GitHub: `git push origin main`.
+2. Connect `Eswar-024/CHAT-APP-E` to [Vercel](https://vercel.com).
+3. Vercel automatically detects **Vite** configuration (`npm run build` & `dist/`).
+4. Click **Deploy**!
 
-- [ ] Message editing and deletion
-- [ ] Message reactions with emojis
-- [ ] File and image sharing
-- [ ] Push notifications
-- [ ] Typing indicators
-- [ ] User presence (online/offline status)
-- [ ] Message threads
-- [ ] User blocking
-- [ ] TypeScript migration
-- [ ] Automated tests
+---
 
-See [Contributing Guide](CONTRIBUTING.md) for details on how to help!
+## 📞 Author & Contact
 
-## License
+Made with 💓 by **Eswar**
 
-Licensed under the [Apache License 2.0](LICENSE.md). Original copyright notices are retained.
-
-## Original copyright
-
-Original portions of this codebase were created by **Alamin** and are licensed under Apache License 2.0.
-
-## Contributors
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
-
-## Support
-
-- Read the [architecture docs](ARCHITECTURE.md) for questions about code
+* 🐙 **GitHub**: [https://github.com/Eswar-024](https://github.com/Eswar-024)
+* 📸 **Instagram**: [@20_eswar_04](https://instagram.com/20_eswar_04)
+* 📞 **Phone**: 7013584577
 
 ---
 
 <div align="center">
-
-Licensed under Apache 2.0
-
+  <sub>© 2026 CHAT-APP E. All rights reserved.</sub>
 </div>
