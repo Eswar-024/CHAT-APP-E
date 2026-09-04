@@ -7,10 +7,13 @@ export class ApiError extends Error {
   }
 }
 
+const BASE_URL = import.meta.env.VITE_API_URL || "";
+
 export async function apiRequest(path, options = {}) {
   const { method = "GET", body, headers, signal } = options;
+  const fullPath = path.startsWith("http") ? path : `${BASE_URL}${path}`;
 
-  const response = await fetch(path, {
+  const response = await fetch(fullPath, {
     method,
     credentials: "include",
     signal,

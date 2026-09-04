@@ -1,10 +1,11 @@
 import { io } from "socket.io-client";
 
 let socket;
+const SERVER_URL = import.meta.env.VITE_API_URL || undefined;
 
 export function getSocket() {
   if (!socket) {
-    socket = io({
+    socket = io(SERVER_URL, {
       path: "/socket.io",
       withCredentials: true,
       autoConnect: false,
