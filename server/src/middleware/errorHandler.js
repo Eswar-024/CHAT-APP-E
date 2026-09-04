@@ -1,5 +1,4 @@
 import { ZodError } from "zod";
-import { config } from "../config.js";
 import { AppError } from "../utils/AppError.js";
 
 export function notFoundHandler(_req, res) {
@@ -7,6 +6,8 @@ export function notFoundHandler(_req, res) {
 }
 
 export function errorHandler(err, _req, res, _next) {
+  console.error("API Server Error:", err);
+
   if (err instanceof ZodError) {
     return res.status(400).json({
       error: "Invalid input",
@@ -28,10 +29,8 @@ export function errorHandler(err, _req, res, _next) {
     });
   }
 
-  console.error("Unhandled error");
-  if (!config.isProduction) {
-    console.error(err);
-  }
-
-  return res.status(500).json({ error: "Internal server error" });
+  return res.status(500).json({
+    error: err.message || "Internal server error",
+    status: 500,
+  });
 }

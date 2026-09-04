@@ -11,18 +11,19 @@ export function requireTrustedOrigin(req, _res, next) {
 
   const origin = req.headers.origin;
   if (!origin) {
-    if (config.isProduction) {
-      next(new AppError(403, "Forbidden"));
-      return;
-    }
     next();
     return;
   }
 
-  if (!config.clientOrigins.includes(origin)) {
-    next(new AppError(403, "Forbidden"));
+  if (
+    !config.isProduction ||
+    origin.endsWith(".vercel.app") ||
+    config.clientOrigins.includes(origin) ||
+    config.clientOrigins.includes("*")
+  ) {
+    next();
     return;
   }
 
-  next();
+  next(new AppError(403, "Forbidden"));
 }

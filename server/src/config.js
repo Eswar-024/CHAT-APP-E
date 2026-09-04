@@ -9,29 +9,35 @@ dotenv.config({ path: path.resolve(serverDir, "../.env") });
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.coerce.number().int().positive().default(3001),
-  CLIENT_ORIGIN: z.string().min(1).default("http://localhost:3000"),
+  CLIENT_ORIGIN: z.string().default("http://localhost:3000"),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   DATABASE_SSL: z
-    .string()
+    .union([z.string(), z.boolean()])
     .optional()
     .transform((value) => {
-      if (value === undefined) return true;
-      return value !== "false";
+      if (value === undefined || value === null) return true;
+      return String(value) !== "false";
     }),
-  SESSION_COOKIE_NAME: z.string().min(1).default("sid"),
+  SESSION_COOKIE_NAME: z.string().default("sid"),
   SESSION_TTL_DAYS: z.coerce.number().int().positive().default(14),
-  COOKIE_SECURE: z.string().optional(),
+  COOKIE_SECURE: z
+    .union([z.string(), z.boolean()])
+    .optional()
+    .transform((value) => {
+      if (value === undefined || value === null) return undefined;
+      return String(value) === "true";
+    }),
   COOKIE_SAMESITE: z.enum(["lax", "strict", "none"]).default("lax"),
   TRUST_PROXY: z
-    .string()
+    .union([z.string(), z.boolean()])
     .optional()
-    .transform((value) => value === "true"),
+    .transform((value) => String(value) === "true"),
   DATABASE_SSL_REJECT_UNAUTHORIZED: z
-    .string()
+    .union([z.string(), z.boolean()])
     .optional()
     .transform((value) => {
-      if (value === undefined) return undefined;
-      return value !== "false";
+      if (value === undefined || value === null) return false;
+      return String(value) === "true";
     }),
 });
 
@@ -41,6 +47,7 @@ if (!parsed.success) {
   const details = parsed.error.issues
     .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
     .join("; ");
+  console.error("Invalid server environment configuration:", details);
   throw new Error(`Invalid server environment: ${details}`);
 }
 
@@ -50,7 +57,10 @@ export const config = {
   nodeEnv: env.NODE_ENV,
   isProduction: env.NODE_ENV === "production",
   port: env.PORT,
-  clientOrigins: env.CLIENT_ORIGIN.split(",").map((origin) => origin.trim()),
+  clientOrigins: (env.CLIENT_ORIGIN || "*")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   databaseUrl: env.DATABASE_URL,
   databaseSsl: env.DATABASE_SSL,
   sessionCookieName: env.SESSION_COOKIE_NAME,
@@ -58,15 +68,8 @@ export const config = {
   cookieSecure:
     env.COOKIE_SECURE === undefined
       ? env.NODE_ENV === "production"
-      : env.COOKIE_SECURE === "true",
+      : env.COOKIE_SECURE,
   cookieSameSite: env.COOKIE_SAMESITE,
   trustProxy: env.TRUST_PROXY === true,
-  databaseSslRejectUnauthorized:
-    env.DATABASE_SSL_REJECT_UNAUTHORIZED === undefined
-      ? env.NODE_ENV === "production"
-      : env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+  databaseSslRejectUnauthorized: env.DATABASE_SSL_REJECT_UNAUTHORIZED === true,
 };
-
-if (config.cookieSameSite === "none" && !config.cookieSecure) {
-  throw new Error("COOKIE_SAMESITE=none requires COOKIE_SECURE=true");
-}

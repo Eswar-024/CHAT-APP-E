@@ -12,7 +12,7 @@ import conversationsRoutes from "./modules/conversations/conversations.routes.js
 
 export const app = express();
 
-app.set("trust proxy", config.trustProxy ? 1 : false);
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
 app.use(
@@ -24,7 +24,13 @@ app.use(
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || config.clientOrigins.includes(origin)) {
+      if (
+        !origin ||
+        origin.endsWith(".vercel.app") ||
+        config.clientOrigins.includes(origin) ||
+        config.clientOrigins.includes("*") ||
+        !config.isProduction
+      ) {
         callback(null, true);
         return;
       }
