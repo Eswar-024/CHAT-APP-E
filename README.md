@@ -4,7 +4,7 @@
 
   <p><strong>A Modern, Feature-Rich Real-Time Messaging Application</strong></p>
 
-  <p>Made with 💓 by <strong>Eswar</strong></p>
+  <p>Made with 💗 by <strong>Eswar</strong></p>
 
   <div>
     <a href="https://github.com/Eswar-024/CHAT-APP-E">GitHub Repository</a> •
